@@ -1,13 +1,23 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://meamedicadental.apiblueprint.org/
 
-# meamedica
+# meamedicadental
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+API to define and disclose methods to interact with medical data related with dentistry.
 
-## Questions Collection [/questions]
+Although public, this API is developed and made available by Insight Pharma Services BV. 
 
-### List All Questions [GET]
+Any further questions can be addressed by using the contacts available in www.insightpharma.nl.
+
+Absolutely nothing is granted by the direct use or derivative of the content hereby described. 
+
+Check https://apiblueprint.org/ for technical information.
+
+## Practice API  [/practice]
+
+### List All Practices [GET]
+
+List all the dental practices in the system.
 
 + Response 200 (application/json)
 
@@ -33,11 +43,9 @@ Polls is a simple API allowing consumers to view polls and vote in them.
             }
         ]
 
-### Create a New Question [POST]
+### Create a New Practice [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+Action to create a new dental practice.
 
 + Request (application/json)
 
@@ -78,3 +86,29 @@ form of choices.
                     }
                 ]
             }
+
+## Patient API  [/patient]
+
+### List All Patients [GET]
+
+List all the patients in the system.
+
++ Response 201 (application/json)
+
+        [
+            {
+                "outcome": "Under development...",
+            }
+        ]
+
+### Create a New Patient [POST]
+
+Action to create a new patient.
+
++ Response 201 (application/json)
+
+        [
+            {
+                "outcome": "Under development...",
+            }
+        ]
