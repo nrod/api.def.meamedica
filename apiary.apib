@@ -3,13 +3,15 @@ HOST: http://meamedicadental.apiblueprint.org/
 
 # meamedicadental
 
-API to define and disclose methods to interact with medical data related with dentistry.
+This is an API to define and disclose methods to interact with medical data related with dentistry.
 
 Although public, this API is developed and made available by Insight Pharma Services BV. 
 
 Any further questions can be addressed by using the contacts available in www.insightpharma.nl.
 
-Absolutely nothing is granted by the direct use or derivative of the content hereby described. 
+Absolutely nothing is granted by the direct or indirect use of the content hereby described. 
+
+#### something else
 
 Check https://apiblueprint.org/ for technical information.
 
@@ -19,55 +21,38 @@ Check https://github.com/apiaryio/api-blueprint/tree/master/examples for example
 
 ## Practice API  [/practice]
 
-### List All Practices [GET]
-
-List all the dental practices in the system.
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
 ### Create a New Practice [POST]
 
-Action to create a new dental practice.
+Action to create a new dental practice by assigning the practice data from the client to the one in our model. As a return value one of the received identifiers will be sent as confirmation in case of success. In case of an error a simple -1 will be sent.
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
+            "AgbCode": "string",
+            "Name": "string",
+            "Address": "string",
+            "Email": "string",
+            "NumberOfPatients": 0,
+            "Dentists": [
+                {
+                  "BigNumber": "string",
+                  "AgbCode": "string",
+                  "Name": "string",
+                  "Specialty": "string"
+                }
             ]
         }
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Headers
 
-            Location: /questions/2
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0,
+            X-AspNet-Version: 4.0.30319,
+            X-Powered-By: ASP.NET,
+            Cache-control: no-cache,
+            Expires: -1
 
     + Body
 
