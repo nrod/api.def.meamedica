@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: http://meamedicadental.apiblueprint.org/
 
-# meamedicadental
+# meamedicadental API
 
 This is an API to define and disclose methods to interact with medical data related with dentistry.
 
@@ -11,9 +11,19 @@ Any further questions can be addressed by using the contacts available at www.in
 
 Absolutely nothing is granted by the direct or indirect use of the content hereby described. 
 
+#### API Blueprint Tutorial
+Check https://apiary.io/blueprint for a quick tutorial.
+
+#### API Examples
+Check https://github.com/apiaryio/api-blueprint/tree/master/examples for examples.
+
+#### API Blueprint 
+Check https://apiblueprint.org/ for detailed technical information.
+
+
 # Group API Description
 
-## Practice API  [/practice]
+## Practice Management  [/practice]
 
 ### Create a new Practice [POST]
 
@@ -80,11 +90,17 @@ Shows information about a dental practice by using the practice identifier or th
                 "DateCreated": "string"
             }
 
-## Patient API  [/patient]
+## Patient Management  [/patient]
 
 ### List All Patients [GET]
 
 List all the patients in the system.
+
++ Request (application/json)
+
+        {
+            "id": int
+        }
 
 + Response 201 (application/json)
 
@@ -98,6 +114,12 @@ List all the patients in the system.
 
 Action to create a new patient.
 
++ Request (application/json)
+
+        {
+            "id": int
+        }
+
 + Response 201 (application/json)
 
         [
@@ -105,16 +127,5 @@ Action to create a new patient.
                 "outcome": "Under development...",
             }
         ]
-
-## External References [/external]
-
-### API Blueprint 
-
-Check https://apiblueprint.org/ for technical information.
-
-### API Examples
-
-Check https://github.com/apiaryio/api-blueprint/tree/master/examples for examples.
-
 
 
