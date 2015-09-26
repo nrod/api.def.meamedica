@@ -25,7 +25,7 @@ Check https://apiblueprint.org/ for detailed technical information.
 
 ## Practice Management  [/practice]
 
-### Create a new Practice [POST]
+### Create a new Practice with Dentists [POST]
 
 Action to create a new dental practice by assigning the practice data from the client to the one in our model. The response will contain a Result value (-1 in case of error or the practice AGB Code in case of success) and an array of Messages which have details about the errors that occurred.
 
@@ -35,28 +35,23 @@ Action to create a new dental practice by assigning the practice data from the c
             "AgbCode": "string",
             "Name": "string",
             "Address": "string",
+            "PostalCode": "string",
+            "City": "string",
             "Email": "string",
             "NumberOfPatients": 0,
             "Dentists": [
                 {
                   "BigNumber": "string",
                   "AgbCode": "string",
-                  "Name": "string",
-                  "Specialty": "string"
+                  "Initials": "string",
+                  "LastName": "string",
+                  "Specialty": "string",
+                  "Email": "string"
                 }
             ]
         }
 
 + Response 200 (application/json)
-
-    + Headers
-
-            Pragma: no-cache
-            Server: Microsoft-IIS/8.0,
-            X-AspNet-Version: 4.0.30319,
-            X-Powered-By: ASP.NET,
-            Cache-control: no-cache,
-            Expires: -1
 
     + Body
 
@@ -67,50 +62,9 @@ Action to create a new dental practice by assigning the practice data from the c
                 ]
             }
 
-### Get information about a Practice [GET]
-
-Shows information about a dental practice by using the practice identifier or the practice AGB Code. The response will contain a Result value (-1 in case of error or the practice AGB Code in case of success) and some data fields with information about the practice.
-
-+ Request (application/json)
-
-        {
-            "id": int
-        }
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "Result": "string",
-                "Name": "string",
-                "Address": "string",
-                "Phone": "string",
-                "Kvk": "string",
-                "DateCreated": "string"
-            }
-
 ## Patient Management  [/patient]
 
-### List All Patients [GET]
-
-List all the patients in the system.
-
-+ Request (application/json)
-
-        {
-            "id": int
-        }
-
-+ Response 201 (application/json)
-
-        [
-            {
-                "outcome": "Under development...",
-            }
-        ]
-
-### Create a New Patient [POST]
+### Create a new Patient [POST]
 
 Action to create a new patient.
 
