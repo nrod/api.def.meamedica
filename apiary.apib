@@ -98,4 +98,27 @@ Action to create a new patient.
             ]
         }
 
+### Get an overview of a Patient [GET]
+
+Action to get information about an existing Patient.
+
++ Request (application/json)
+
+        {
+            "PracticeAgbCode": "string",
+            "CareProfessionialAgbCode": "string",
+            "PatientId": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "AgbCode": "string",
+            "PatientId": "string",
+            "AsaScore": "string",
+            "NrOfMedicines": "string",
+            "NrOfMtiMessages": "string",
+            "InformationDate": "string"
+        }
 
