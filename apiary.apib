@@ -53,14 +53,12 @@ Action to create a new dental practice by assigning the practice data from the c
 
 + Response 200 (application/json)
 
-    + Body
-
-            {
-                "Result": "string",
-                "Messages": [
-                    "string"
-                ]
-            }
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
 
 ## Patient Management  [/patient]
 
@@ -71,15 +69,33 @@ Action to create a new patient.
 + Request (application/json)
 
         {
-            "id": int
+            "PracticeAgbCode": "string",
+            "CareProfessionialAgbCode": "string",
+            "Patients": [
+                {
+                  "PatientId": "string",
+                  "Gender": "string",
+                  "Birthdate": "string",
+                  "Height": "string",
+                  "Weight": "string"
+                }
+            ]
         }
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-        [
-            {
-                "outcome": "Under development...",
-            }
-        ]
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ],
+            "PracticeAgbCode": "string",
+            "Patients": [
+                {
+                  "PatientId": "string",
+                  "ActivationUrl": "string"
+                }
+            ]
+        }
 
 
