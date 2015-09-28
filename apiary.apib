@@ -1,11 +1,22 @@
 FORMAT: 1A
 HOST: http://api.meamedica.nl/
 
-# meamedica API for dental practices
+# Dental Practice API
 
-This is an API to define and disclose methods to interact with medical data related with dentistry. This API will be updated and developed whenever necessary and the first release includes a few core management methods which enable the creation of a practice with a set of dentists and also the patients that are currently treated by that practice. There is also a convenience method to get overview information about a given patient.
+## Scope
+
+This is an API to define and disclose methods to interact with medical data related with dentistry. This API will be updated and developed whenever necessary and the first release includes a few core management methods which enable:
+ - the creation of a practice with a set of dentists
+ - the addition of the patients that are currently treated by that practice
+ - the loading of overview information about a given patient
+
+## Ownership
 
 Although public, this API prototype was developed and made available by **[Insight Pharma Services BV](http://www.insightpharma.nl)**. Any questions or comments can be sent to the contacts available at our site. Absolutely nothing is granted by the direct or indirect use of the content hereby described. 
+
+## Version History
+
+**v1.0.280915** - Includes 3 methods (create practice/dentists, create patient, load patient overview)
 
 # Group API Description
 
@@ -13,7 +24,31 @@ Although public, this API prototype was developed and made available by **[Insig
 
 ### Create a new Practice with Dentists [POST]
 
-Action to create a new dental practice by assigning the practice data from the client to the one in our model. The response will contain a Result value (-1 in case of error or the practice AGB Code in case of success) and an array of Messages which have details about the errors that occurred.
+This method can be used to create a new dental practice with a set of dentists. It expects to receive data about the practice and also about the dentists that work in the practice.
+The request should then contain:
+ - About the practice
+   - AGB code
+   - Name
+   - Address
+   - Postal code
+   - City
+   - Cmail
+   - Number of patients
+ - About the dentists (a list of) 
+   - BIG number
+   - AGB code
+   - Initials
+   - Last name
+   - Specialty
+   - Email
+
+The response will contain:
+ - a Result value 
+   - -1 in case of error or the practice AGB Code in case of success) 
+ - a list of Messages 
+   - which have details about the errors that occurred
+
+`POST` https://api.meamedica.nl/practice
 
 + Request (application/json)
 
@@ -84,7 +119,7 @@ Action to create a new patient.
             ]
         }
 
-### Get an overview of a Patient [GET]
+### Load overview information about a Patient [GET]
 
 Action to get information about an existing Patient.
 
@@ -110,13 +145,7 @@ Action to get information about an existing Patient.
 
 # Group Technical Reference
 
-Just as a background detail this API documentation was done usign Apiary and (some of) the resources 
-
-#### API Blueprint Tutorial
-Check https://apiary.io/blueprint for a quick tutorial.
-
-#### API Examples
-Check https://github.com/apiaryio/api-blueprint/tree/master/examples for examples.
-
-#### API Blueprint 
-Check https://apiblueprint.org/ for detailed technical information.
+Just as a background note this API documentation was done usign [Apiary](https://apiary.io) and (some of) the resources used to describe this API can be found in the following URLs:
+ - **API Blueprint Tutorial** : https://apiary.io/blueprint
+ - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
+ - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
