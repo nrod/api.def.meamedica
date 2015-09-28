@@ -92,16 +92,20 @@ The request should then contain:
  - About the patients (a list of) 
    - Patient ID (in the client system)
    - AGB code (from the assigned dentist)
-   - Gender
-   - Birthdate
-   - Height
-   - Weight
+   - Gender (m/f)
+   - Birthdate (dd-mm-yyyy)
+   - Height (in cm)
+   - Weight (in kg)
 
 The response will contain:
  - a Result value 
    - `OK` in case of success or a `message` otherwise 
  - a Messages list 
    - the practice `AGB code` in case of success or a list of the `errors` that occurred
+ - a PatientStatus list with
+   - Patient ID (in the client system)
+   - Patient status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
+   - Activation URL (not applicable `OK_ACTIVE`)
 
 **Usage:** `POST` to *https://api.meamedica.nl/patient*
 
