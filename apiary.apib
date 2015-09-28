@@ -15,9 +15,17 @@ can be used in several medical areas.
 ## Ownership
 
 Although public, this API blueprint is developed and made available 
-by **[Insight Pharma Services BV](http://www.insightpharma.nl)**. Any questions 
-or comments can be sent to the contacts available in our site. Absolutely 
-nothing is granted by the direct or indirect use of the content hereby described. 
+by **[Insight Pharma Services BV](http://www.insightpharma.nl)**. It is possible 
+that some of the methods here described are already developed to fullfil a 
+specific client need. Any questions, comments or requests can therefore be sent 
+to the contacts available in our site.
+
+## Disclaimer
+
+Absolutely nothing is granted by the direct or indirect use of the content 
+hereby described. This API contains references to medical terms and/or concepts
+that exist in the Netherlands. These terms and/or concepts might not apply to 
+other countries.
 
 ## Version History
 
@@ -35,7 +43,9 @@ The current release includes a few core management methods which enable:
 
 ### Create a new Practice with Dentists [POST]
 
-This method can be used to create a new dental practice with a set of dentists. It expects to receive data about the practice and also about the dentists that work in the practice.
+This method can be used to create a new dental practice with a set of dentists. 
+It expects to receive data about the practice and also about the dentists that 
+work in the practice.
 The request should then contain:
  - About the practice
    - AGB code
@@ -96,7 +106,9 @@ The response will contain:
 
 ### Create new Patients for a Practice [POST]
 
-This method can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
+This method can be used to create one or more patients for a given practice. 
+It expects to receive data about the patients and about the practice were 
+they are registered as well as the dentist that they are assigned to.
 The request should then contain:
  - About the practice
    - AGB code
@@ -195,7 +207,9 @@ The response will contain:
 
 # Group Technical Reference
 
-Just as a background note this API documentation was done usign [Apiary](https://apiary.io) and (some of) the resources used to describe this API can be found in the following URLs:
+Just as a background note this API documentation was done using 
+[Apiary](https://apiary.io) and (some of) the resources used to describe 
+this API can be found in the following URLs:
  - **API Blueprint Tutorial** : https://apiary.io/blueprint
  - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
  - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
