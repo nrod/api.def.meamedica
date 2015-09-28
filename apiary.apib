@@ -87,8 +87,8 @@ The response will contain:
 
 This method can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
 The request should then contain:
- - About the practice and dentist
-   - AGB code from the practice
+ - About the practice
+   - AGB code
  - About the patients (a list of) 
    - Patient ID (in the client system)
    - AGB code (from the assigned dentist)
@@ -102,9 +102,9 @@ The response will contain:
    - `OK` in case of success or a `message` otherwise 
  - a Messages list 
    - the practice `AGB code` in case of success or a list of the `errors` that occurred
- - a PatientStatus list with
+ - a PatientInfo list with
    - Patient ID (in the client system)
-   - Patient status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
+   - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
    - Activation URL (not applicable `OK_ACTIVE`)
 
 **Usage:** `POST` to *https://api.meamedica.nl/patient*
@@ -113,10 +113,10 @@ The response will contain:
 
         {
             "PracticeAgbCode": "string",
-            "CareProfessionialAgbCode": "string",
             "Patients": [
                 {
                   "PatientId": "string",
+                  "CareProfessionialAgbCode": "string",
                   "Gender": "string",
                   "Birthdate": "string",
                   "Height": "string",
@@ -143,7 +143,23 @@ The response will contain:
 
 ### Load overview information about a Patient [GET]
 
-Action to get information about an existing Patient.
+This method can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
+The request should then contain:
+ - AGB code (from the practice)
+ - AGB code (from the assigned dentist)
+ - Patient ID (in the client system)
+
+The response will contain:
+ - a Result value 
+   - `OK` in case of success or a `message` otherwise 
+ - a Messages list 
+   - the practice `AGB code` in case of success or a list of the `errors` that occurred
+ - a PatientInfo list with
+   - Patient ID (in the client system)
+   - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
+   - Activation URL (not applicable `OK_ACTIVE`)
+
+**Usage:** `GET` from *https://api.meamedica.nl/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
 
 + Request (application/json)
 
