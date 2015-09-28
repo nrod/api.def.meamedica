@@ -7,12 +7,10 @@ HOST: http://api.meamedica.nl/
 
 This is an API to define and disclose methods to interact with medical data. 
 This API will be continuously updated and developed to provide methods that 
-can be used in several medical areas. 
-The current release, focused on dental practices, includes a few core management 
-methods which enable:
- - the creation of a practice with a set of dentists
- - the addition of the patients that are currently treated by that practice
- - the loading of overview information about a given patient
+can be used in several medical areas.
+
+### Business Areas
+ - Dental Practices
 
 ## Ownership
 
@@ -23,11 +21,17 @@ nothing is granted by the direct or indirect use of the content hereby described
 
 ## Version History
 
-**v1.0.280915** - First version of Dental Practice API which includes 3 methods (create practice/dentists, create patient, load patient overview)
+**v1.0.280915** - First version of Dental Practice API which includes 3 methods 
+(create practice/dentists, create patient, load patient overview)
 
 # Group Dental Practice API
 
 ## Practice Management  [/practice]
+
+The current release includes a few core management methods which enable:
+ - the creation of a practice with a set of dentists
+ - the addition of the patients that are currently treated by that practice
+ - the loading of overview information about a given patient
 
 ### Create a new Practice with Dentists [POST]
 
@@ -150,7 +154,7 @@ The response will contain:
 
 ### Load overview information about a Patient [GET]
 
-This method is used to get some information about a patient. can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
+This method is used to get an overview of some patient information.
 The request should then contain:
  - Practice AGB code
  - Dentist AGB code
@@ -159,12 +163,13 @@ The request should then contain:
 The response will contain:
  - a Result value 
    - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
- - a PatientInfo list with
+ - and Patient information 
+   - the AGB Code of the dentist 
    - Patient ID (in the client system)
-   - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
-   - Activation URL (not applicable `OK_ACTIVE`)
+   - ASA Score
+   - Number of Medicines in use
+   - Number of MTI messages
+   - Date of information (dd-mm-yyyy)
 
 **Usage:** `GET` from *https://api.meamedica.nl/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
 
