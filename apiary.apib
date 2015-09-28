@@ -1,11 +1,12 @@
 FORMAT: 1A
 HOST: http://api.meamedica.nl/
 
-# Dental Practice API
+# meamedica API
 
 ## Scope
 
-This is an API to define and disclose methods to interact with medical data related with dentistry. This API will be updated and developed whenever necessary and the first release includes a few core management methods which enable:
+This is an API to define and disclose methods to interact with medical data. This API will be continuously updated and developed to provide methods that can be used in several medical areas. 
+The current release, focused on dental practices, includes a few core management methods which enable:
  - the creation of a practice with a set of dentists
  - the addition of the patients that are currently treated by that practice
  - the loading of overview information about a given patient
@@ -16,9 +17,9 @@ Although public, this API prototype was developed and made available by **[Insig
 
 ## Version History
 
-**v1.0.280915** - Includes 3 methods (create practice/dentists, create patient, load patient overview)
+**v1.0.280915** - First version of Dental Practice API which includes 3 methods (create practice/dentists, create patient, load patient overview)
 
-# Group API Description
+# Group Dental Practice API
 
 ## Practice Management  [/practice]
 
@@ -143,7 +144,7 @@ The response will contain:
 
 ### Load overview information about a Patient [GET]
 
-This method can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
+This method is used to get some information about a patient. can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
 The request should then contain:
  - Practice AGB code
  - Dentist AGB code
