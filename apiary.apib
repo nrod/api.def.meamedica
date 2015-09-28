@@ -32,7 +32,7 @@ The request should then contain:
    - Address
    - Postal code
    - City
-   - Cmail
+   - Email
    - Number of patients
  - About the dentists (a list of) 
    - BIG number
@@ -44,11 +44,11 @@ The request should then contain:
 
 The response will contain:
  - a Result value 
-   - -1 in case of error or the practice AGB Code in case of success) 
- - a list of Messages 
-   - which have details about the errors that occurred
+   - `OK` in case of success or a `message` otherwise 
+ - a Messages list 
+   - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
-`POST` https://api.meamedica.nl/practice
+**Usage:** `POST` to *https://api.meamedica.nl/practice*
 
 + Request (application/json)
 
@@ -83,9 +83,27 @@ The response will contain:
 
 ## Patient Management  [/patient]
 
-### Create a new Patient [POST]
+### Create new Patients for a Practice [POST]
 
-Action to create a new patient.
+This method can be used to create one or more patients for a given practice. It expects to receive data about the patients and about the practice were they are registered as well as the dentist that they are assigned to.
+The request should then contain:
+ - About the practice and dentist
+   - AGB code from the practice
+ - About the patients (a list of) 
+   - Patient ID (in the client system)
+   - AGB code (from the assigned dentist)
+   - Gender
+   - Birthdate
+   - Height
+   - Weight
+
+The response will contain:
+ - a Result value 
+   - `OK` in case of success or a `message` otherwise 
+ - a Messages list 
+   - the practice `AGB code` in case of success or a list of the `errors` that occurred
+
+**Usage:** `POST` to *https://api.meamedica.nl/patient*
 
 + Request (application/json)
 
