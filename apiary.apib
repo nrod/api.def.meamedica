@@ -69,7 +69,7 @@ The response will contain:
  - a Messages list 
    - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
-**Usage:** `POST` to *https://api.meamedica.nl/practice*
+**Usage:** `POST` to *https://api.meamedica.nl/v1/practice*
 
 + Request (application/json)
 
@@ -128,9 +128,9 @@ The response will contain:
  - a PatientInfo list with
    - Patient ID (in the client system)
    - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
-   - Activation URL (not applicable `OK_ACTIVE`)
+   - Activation URL (not applicable to `OK_ACTIVE`)
 
-**Usage:** `POST` to *https://api.meamedica.nl/patient*
+**Usage:** `POST` to *https://api.meamedica.nl/v1/patient*
 
 + Request (application/json)
 
@@ -183,7 +183,7 @@ The response will contain:
    - Number of MTI messages
    - Date of information (dd-mm-yyyy)
 
-**Usage:** `GET` from *https://api.meamedica.nl/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
+**Usage:** `GET` from *https://api.meamedica.nl/v1/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
 
 + Request (application/json)
 
