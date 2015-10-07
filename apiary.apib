@@ -29,10 +29,12 @@ other countries.
 
 ## Version History
 
-**v1.0.280915** - Added Dental Practice API group which includes 3 methods 
+### v1.0.280915
+Added Dental Practice API group which includes 3 methods 
 (create practice/dentists, create patient, load patient overview).
 
-**v1.1.071015** - Added Common API group which includes 2 methods (access, version),
+### v1.1.071015
+Added Common API group which includes 2 methods (access, version),
 implemented token-based authentication in all methods and updated Usage URLs.
 
 # Group Common API
@@ -170,7 +172,7 @@ The request should then contain:
    - AGB code
  - About the patients (a list of) 
    - Patient ID (in the client system)
-   - AGB code (from the assigned dentist)
+   - Dentist AGB code (this patient's dentist)
    - Gender (m/f)
    - Birthdate (dd-mm-yyyy)
    - Height (in cm)
@@ -192,11 +194,11 @@ The response will contain:
 
         {
             "Token": "string",
-            "PracticeAgbCode": "string",
+            "PracticeAgb": "string",
             "Patients": [
                 {
                   "PatientId": "string",
-                  "CareProfessionialAgbCode": "string",
+                  "DentistAgb": "string",
                   "Gender": "string",
                   "Birthdate": "string",
                   "Height": "string",
@@ -234,21 +236,21 @@ The response will contain:
  - a Result value 
    - `OK` in case of success or a `message` otherwise 
  - and Patient information 
-   - the AGB Code of the dentist 
+   - Dentist AGB code 
    - Patient ID (in the client system)
    - ASA Score
    - Number of Medicines in use
    - Number of MTI messages
    - Date of information (dd-mm-yyyy)
 
-**Usage:** `GET` from *https://api.meamedica.nl/patient?token=123xyz&practiceagbcode=123&careprofessionalagbcode=123&patientid=123*
+**Usage:** `GET` from *https://api.meamedica.nl/patient?token=123xyz&practiceagb=123&dentistagb=123&patientid=123*
 
 + Request (application/json)
 
         {
             "Token": "string",
-            "PracticeAgbCode": "string",
-            "CareProfessionialAgbCode": "string",
+            "PracticeAgb": "string",
+            "DentistAgb": "string",
             "PatientId": "string"
         }
 
@@ -256,7 +258,7 @@ The response will contain:
 
         {
             "Result": "string",
-            "AgbCode": "string",
+            "DentistAgb": "string",
             "PatientId": "string",
             "AsaScore": "string",
             "NrOfMedicines": "string",
