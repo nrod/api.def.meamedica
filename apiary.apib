@@ -45,10 +45,10 @@ This method is used to get a token based on a valid client key. Clients will
 receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
 The request should then contain:
- - Client Key
+ - a `String` value with the client key
 
 The response will contain:
- - a String value with a token
+ - a `String` value with an authorized token
 
 **Usage:** `GET` from *https://api.meamedica.nl/access?clientKey=xyz*
 
@@ -73,7 +73,7 @@ purposes.
 Nothing is expected in the request.
 
 The response will contain:
- - a String value with the current version 
+ - a `String` value with the current version 
 
 **Usage:** `GET` from *https://api.meamedica.nl/version*
 
@@ -100,6 +100,7 @@ This method can be used to create a new dental practice with a set of dentists.
 It expects to receive data about the practice and also about the dentists that 
 work in the practice.
 The request should then contain:
+ - Authorization Token
  - About the practice
    - AGB code
    - Name
@@ -122,11 +123,12 @@ The response will contain:
  - a Messages list 
    - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
-**Usage:** `POST` to *https://api.meamedica.nl/v1/practice*
+**Usage:** `POST` to *https://api.meamedica.nl/practice*
 
 + Request (application/json)
 
         {
+            "Token": "string",
             "AgbCode": "string",
             "Name": "string",
             "Address": "string",
@@ -163,6 +165,7 @@ This method can be used to create one or more patients for a given practice.
 It expects to receive data about the patients and about the practice were 
 they are registered as well as the dentist that they are assigned to.
 The request should then contain:
+ - Authorization Token
  - About the practice
    - AGB code
  - About the patients (a list of) 
@@ -183,11 +186,12 @@ The response will contain:
    - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
    - Activation URL (not applicable to `OK_ACTIVE`)
 
-**Usage:** `POST` to *https://api.meamedica.nl/v1/patient*
+**Usage:** `POST` to *https://api.meamedica.nl/patient*
 
 + Request (application/json)
 
         {
+            "Token": "string",
             "PracticeAgbCode": "string",
             "Patients": [
                 {
@@ -221,6 +225,7 @@ The response will contain:
 
 This method is used to get an overview of some patient information.
 The request should then contain:
+ - Authorization Token
  - Practice AGB code
  - Dentist AGB code
  - Patient ID (in the client system)
@@ -236,11 +241,12 @@ The response will contain:
    - Number of MTI messages
    - Date of information (dd-mm-yyyy)
 
-**Usage:** `GET` from *https://api.meamedica.nl/v1/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
+**Usage:** `GET` from *https://api.meamedica.nl/patient?token=123xyz&practiceagbcode=123&careprofessionalagbcode=123&patientid=123*
 
 + Request (application/json)
 
         {
+            "Token": "string",
             "PracticeAgbCode": "string",
             "CareProfessionialAgbCode": "string",
             "PatientId": "string"
