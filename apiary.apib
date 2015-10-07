@@ -32,8 +32,8 @@ other countries.
 **v1.0.280915** - Added Dental Practice API group which includes 3 methods 
 (create practice/dentists, create patient, load patient overview).
 
-**v1.1.071015** - Added Common API group which includes 2 methods (access, version)
-and token-based authentication.
+**v1.1.071015** - Added Common API group which includes 2 methods (access, version),
+implemented token-based authentication in all methods and updated Usage URLs.
 
 # Group Common API
 
@@ -41,9 +41,9 @@ and token-based authentication.
 
 ### Get a token based on a client key [GET]
 
-This method is used to get a token based on a valid client key. This token must
+This method is used to get a token based on a valid client key. Clients will 
+receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
-
 The request should then contain:
  - Client Key
 
@@ -55,64 +55,34 @@ The response will contain:
 + Request (application/json)
 
         {
-            "PracticeAgbCode": "string",
-            "CareProfessionialAgbCode": "string",
-            "PatientId": "string"
+            "clientKey": "string"
         }
 
 + Response 200 (application/json)
 
         {
-            "Result": "string",
-            "AgbCode": "string",
-            "PatientId": "string",
-            "AsaScore": "string",
-            "NrOfMedicines": "string",
-            "NrOfMtiMessages": "string",
-            "InformationDate": "string"
+            "token": "string"
         }
 
 ## Version  [/version]
 
 ### Get the current API version [GET]
 
-This method is used to get an overview of some patient information.
-The request should then contain:
- - Practice AGB code
- - Dentist AGB code
- - Patient ID (in the client system)
+This method is used to get the current version of this API mainly for informative
+purposes.
+Nothing is expected in the request.
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - and Patient information 
-   - the AGB Code of the dentist 
-   - Patient ID (in the client system)
-   - ASA Score
-   - Number of Medicines in use
-   - Number of MTI messages
-   - Date of information (dd-mm-yyyy)
+ - a String value with the current version 
 
-**Usage:** `GET` from *https://api.meamedica.nl/v1/patient?practiceagbcode=NN&careprofessionalagbcode=NN&patientid=NN*
+**Usage:** `GET` from *https://api.meamedica.nl/version*
 
 + Request (application/json)
-
-        {
-            "PracticeAgbCode": "string",
-            "CareProfessionialAgbCode": "string",
-            "PatientId": "string"
-        }
 
 + Response 200 (application/json)
 
         {
-            "Result": "string",
-            "AgbCode": "string",
-            "PatientId": "string",
-            "AsaScore": "string",
-            "NrOfMedicines": "string",
-            "NrOfMtiMessages": "string",
-            "InformationDate": "string"
+            "Version": "string"
         }
 
 # Group Dental Practice API
