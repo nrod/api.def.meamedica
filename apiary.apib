@@ -37,6 +37,9 @@ Added Dental Practice API group which includes 3 methods
 Added Common API group which includes 2 methods (access, version),
 implemented token-based authentication in all methods and updated Usage URLs.
 
+### v1.2.121015
+Added new Dental Practice method (subscription) and fine tuned some other methods.
+
 # Group Common API
 
 ## Authentication  [/access]
@@ -106,7 +109,7 @@ The request should then contain:
    - City
    - Email
    - Number of patients
- - About the dentists (a list of) 
+ - About the dentists (a list of) (optional)
    - BIG number
    - AGB code
    - KNMT number
@@ -114,7 +117,7 @@ The request should then contain:
    - Last name
    - Specialty
    - Email
- - About the assistents (a list of) 
+ - About the assistents (a list of) (optional)
    - Initials
    - Last name
    - Email
@@ -176,8 +179,7 @@ It expects to receive data about the patients and about the practice were
 they are registered as well as the dentist that they are assigned to.
 The request should then contain:
  - Authorization Token
- - About the practice
-   - AGB code
+ - Practice AGB code
  - About the patients (a list of) 
    - Patient ID (in the client system)
    - Dentist AGB code (this patient's dentist)
@@ -279,10 +281,11 @@ The response will contain:
 ### Create a Subscription and a Payment model [POST]
 
 This method is intended to assign subscription data to an existing practice. Besides
-the subscription data, there is also some payment and pricing information stored.
+the subscription data, there is also some payment and pricing information that 
+should be provided.
 The request should then contain:
  - Authorization Token
- - Practice AGB Code
+ - Practice AGB code
  - Description (optional)
  - License Type: (Y)early, (M)onthly, (A)uto renew monthly
  - Pricing Type: (S)tandalone, (I)ntegrated
@@ -336,7 +339,7 @@ The response will contain:
 
 # Group Technical Reference
 
-As a background note this API documentation is hosted and was done using 
+As a background note this API documentation is hosted at and was done using 
 [Apiary](https://apiary.io) and (some of) the resources used to describe 
 it can be found in the following URLs:
  - **API Blueprint Tutorial** : https://apiary.io/blueprint
