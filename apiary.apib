@@ -278,26 +278,26 @@ The response will contain:
 
 ### Create a Subscription and a Payment model [POST]
 
-This method can be used to create a new dental practice with a set of dentists. 
-It expects to receive data about the practice and also about the dentists that 
-work in the practice.
+This method is intended to assign subscription data to an existing practice. Besides
+the subscription data, there is also some payment and pricing information stored.
 The request should then contain:
  - Authorization Token
- - About the practice
-   - AGB code
-   - Name
-   - Address
-   - Postal code
-   - City
-   - Email
-   - Number of patients
- - About the dentists (a list of) 
-   - BIG number
-   - AGB code
-   - Initials
-   - Last name
-   - Specialty
-   - Email
+ - Practice AGB Code
+ - Description (optional)
+ - License Type: (Y)early, (M)onthly, (A)uto renew monthly
+ - Pricing Type: (S)tandalone, (I)ntegrated
+ - Pricing Tier: (B)asic, (S)tandard, (P)remium
+ - Payment Type: i(D)eal, (M)asterCard, (V)isa, (A)mEx, (B)ank transfer, Aut. (I)ncasso
+
+If Payment Type is a credit card (MasterCard, Visa or AmEx):
+ - Card Number
+ - Card Year
+ - Card Month
+ - Card Code
+ - Card Name
+ 
+If Payment Type is a bank transfer or automatic debit:
+ - Account Number
 
 The response will contain:
  - a Result value 
@@ -312,32 +312,17 @@ The response will contain:
         {
             "Token": "string",
             "AgbCode": "string",
-            "Name": "string",
-            "Address": "string",
-            "PostalCode": "string",
-            "City": "string",
-            "Email": "string",
-            "NumberOfPatients": 0,
-            "Dentists": [
-                {
-                  "BigNumber": "string",
-                  "AgbCode": "string",
-                  "Initials": "string",
-                  "LastName": "string",
-                  "Specialty": "string",
-                  "Email": "string"
-                }
-            ],
-            "Assistents": [
-                {
-                  "BigNumber": "string",
-                  "AgbCode": "string",
-                  "Initials": "string",
-                  "LastName": "string",
-                  "Specialty": "string",
-                  "Email": "string"
-                }
-            ]
+            "Description": "string",
+            "LicenseType": "string",
+            "PricingType": "string",
+            "PricingTier": "string",
+            "PaymentType": "string",
+            "CardNumber": "string",
+            "CardYear": 0,
+            "CardMonth": 0,
+            "CardCode": 0,
+            "CardName": "string",
+            "AccountNumber": "string"
         }
 
 + Response 200 (application/json)
