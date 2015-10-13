@@ -37,8 +37,9 @@ Added Dental Practice API group which includes 3 methods
 Added Common API group which includes 2 methods (access, version),
 implemented token-based authentication in all methods and updated Usage URLs.
 
-### v1.2.121015
-Added new Dental Practice method (subscription) and fine tuned some other methods.
+### v1.2.131015
+Added new Dental Practice methods (subscription, dentist). This last one replaces
+partially the create practice method that is only to create the practice itself.
 
 # Group Common API
 
@@ -94,11 +95,11 @@ The response will contain:
 
 ## Practice Management  [/practice]
 
-### Create a new Practice with Dentists [POST]
+### Create a new practice [POST]
 
-This method can be used to create a new dental practice with a set of dentists. 
-It expects to receive data about the practice and also about the dentists that 
-work in the practice.
+This method should be used to create a new dental practice. Besides some basic data
+about the practice we should get the practice AGB code and also an email for contact 
+purposes. It should be also provided the number of patients currently registered.
 The request should then contain:
  - Authorization Token
  - About the practice
@@ -109,18 +110,6 @@ The request should then contain:
    - City
    - Email
    - Number of patients
- - About the dentists (a list of) (optional)
-   - BIG number
-   - AGB code
-   - KNMT number
-   - Initials
-   - Last name
-   - Specialty
-   - Email
- - About the assistents (a list of) (optional)
-   - Initials
-   - Last name
-   - Email
 
 The response will contain:
  - a Result value 
@@ -140,7 +129,54 @@ The response will contain:
             "PostalCode": "string",
             "City": "string",
             "Email": "string",
-            "NumberOfPatients": 0,
+            "NumberOfPatients": 0
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
+## Dentist Management  [/dentist]
+
+### Add dentists and/or assistents to a practice [POST]
+
+This method is meant to add a list of dentists and or assistents to an existing
+practice. There are two lists with data one for the dentists and the other for 
+the assistents. The practice AGB code is required as matching identifier. The 
+request should then contain:
+ - Authorization Token
+ - Practice AGB code
+ - About the dentists (a list of)
+   - BIG number
+   - AGB code
+   - KNMT number
+   - Initials
+   - Last name
+   - Specialty
+   - Email
+ - About the assistents (a list of) (optional)
+   - Initials
+   - Last name
+   - Email
+
+The response will contain:
+ - a Result value 
+   - `OK` in case of success or a `message` otherwise 
+ - a Messages list 
+   - the practice `AGB code` in case of success or a list of the `errors` that occurred
+
+**Usage:** `POST` to *https://api.meamedica.nl/dentist*
+
++ Request (application/json)
+
+        {
+            "Token": "string",
+            "PracticeAgb": "string",
             "Dentists": [
                 {
                   "BigNumber": "string",
@@ -172,7 +208,7 @@ The response will contain:
 
 ## Patient Management  [/patient]
 
-### Create new Patients for a Practice [POST]
+### Create new patients for a practice [POST]
 
 This method can be used to create one or more patients for a given practice. 
 It expects to receive data about the patients and about the practice were 
