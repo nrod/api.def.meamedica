@@ -54,20 +54,21 @@ partially the create practice method that is only to create the practice itself.
 
 # Group Common API
 
-## Authentication  [/access]
+## Get an Authentication Token [/access?clientKey={clientKey}]
 
-### Get a token based on a client key [GET]
++ Parameters
+    + clientKey: 12345678 (required, string) - subscription client key as a string
+
+### API Definition [GET]
 
 This method is used to get a token based on a valid client key. Clients will 
 receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
 The request should then contain:
- - a `String` value with the client key
+- a `String` value with the client key
 
 The response will contain:
- - a `String` value with an authorized token
-
-**Usage:** `GET` from *https://api.meamedica.nl/access?clientKey=key*
+- a `String` value with an authorized token
 
 + Request (application/json)
 
@@ -81,20 +82,15 @@ The response will contain:
             "Token": "string"
         }
 
-## Version  [/version]
+## Get Current Version  [/version]
 
-### Get the current API version [GET]
+### API Definition [GET]
 
 This method is used to get the current version of this API mainly for informative
-purposes.
-Nothing is expected in the request.
+purposes. Nothing is expected in the request or as an URL parameter.
 
 The response will contain:
- - a `String` value with the current version 
-
-**Usage:** `GET` from *https://api.meamedica.nl/version*
-
-+ Request (application/json)
+- a `String` value with the current version 
 
 + Response 200 (application/json)
 
@@ -153,7 +149,7 @@ The response will contain:
 ## Get Practice Information [/practice/get?id={id}&token={token}]
 
 + Parameters
-    + id: 12345678 (required, number) - practice AGB code as an 8-digit number,
+    + id: 12345678 (required, number) - practice AGB code as an 8-digit number
     + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
 
 ### API Definition [GET]
