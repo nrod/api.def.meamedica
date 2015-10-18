@@ -152,6 +152,51 @@ The response will contain:
             ]
         }
 
+### Get information about a pratice [GET]
+
+This method is used to get detailed informationa about a practice.
+The request should then contain:
+ - Authorization Token
+ - Practice AGB code
+
+The response will contain:
+ - a Result value 
+   - `OK` in case of success or a `message` otherwise 
+ - a Messages list 
+   - the practice `AGB code` in case of success or a list of the `errors` that occurred
+ - and Practice information 
+   - Practice AGB code 
+   - Name
+   - Address
+   - Phone
+   - Kvk
+   - Date created (dd-mm-yyyy)
+   - Date of information (dd-mm-yyyy)
+
+**Usage:** `GET` from *https://api.meamedica.nl/patient?token=xyz&practiceagb=1&dentistagb=1&patientid=1*
+
++ Request (application/json)
+
+        {
+            "Token": "string",
+            "PracticeAgb": "string",
+            "DentistAgb": "string",
+            "PatientId": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "DentistAgb": "string",
+            "PatientId": "string",
+            "AsaScore": "string",
+            "NrOfMedicines": "string",
+            "NrOfMtiMessages": "string",
+            "InformationDate": "string"
+        }
+
+
 ## Dentist Management  [/dentist]
 
 ### Add dentists and/or assistents to a practice [POST]
