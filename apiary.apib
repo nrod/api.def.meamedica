@@ -66,10 +66,10 @@ receive their client key when they subscribe to this API service. This token mus
 then be used in all other requests to API methods here described.
 
 The URL should then contain the parameter:
-- a `String` value with the client key
+- the client key
 
 The response will contain:
-- a `String` value with an authorized token
+- an authorized and encrypted token
 
 + Response 200 (application/json)
 
@@ -85,7 +85,7 @@ This method is used to get the current version of this API mainly for informativ
 purposes. Nothing is expected in the request or as an URL parameter.
 
 The response will contain:
-- a `String` value with the current version 
+- the current version 
 
 + Response 200 (application/json)
 
@@ -104,7 +104,7 @@ about the practice we should get the practice AGB code and also an email for con
 purposes. It should be also provided the number of patients currently registered.
 
 The request should then contain:
-- Authorization Token
+- Authorization token
 - About the practice
  - AGB code
  - Name
@@ -154,7 +154,7 @@ This method is used to get detailed information about the practice identified by
 the AGB code given as parameter.
 
 The URL should then contain:
- - Authorization Token
+ - Authorization token
  - Practice AGB code
 
 The response will contain:
@@ -162,7 +162,7 @@ The response will contain:
  - `OK` in case of success or a `message` otherwise 
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
-- and Practice information 
+- and about the practice
  - Practice AGB code 
  - Name
  - Address
@@ -174,13 +174,17 @@ The response will contain:
 + Response 200 (application/json)
 
         {
+            "AgbCode": "string",
+            "Name": "string",
+            "Address": "string",
+            "Phone": "string",
+            "Kvk": "string",
+            "DateCreated": "string",
+            "InformationDate": "string",
             "Result": "string",
-            "DentistAgb": "string",
-            "PatientId": "string",
-            "AsaScore": "string",
-            "NrOfMedicines": "string",
-            "NrOfMtiMessages": "string",
-            "InformationDate": "string"
+            "Messages": [
+                "string"
+            ]
         }
 
 ## Get Practice Dentists [/practice/dentists/get?id={id}&token={token}]
@@ -195,7 +199,7 @@ This method is used to get detailed information about the dentists and assistent
 that work in the practice identified by the AGB code given as parameter.
 
 The URL should then contain:
- - Authorization Token
+ - Authorization token
  - Practice AGB code
 
 The response will contain:
@@ -203,7 +207,7 @@ The response will contain:
  - `OK` in case of success or a `message` otherwise 
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
-- Practice AGB code 
+- the Practice AGB code 
 - a list of Dentists
  - Initials
  - Last Name
