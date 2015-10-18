@@ -10,7 +10,7 @@ This API will be continuously updated and developed to provide methods that
 can be used in several medical areas.
 
 ### Current Business Areas
- - Dental Practices
+- Dental Practices
 
 ## Ownership
 
@@ -54,27 +54,22 @@ partially the create practice method that is only to create the practice itself.
 
 # Group Common API
 
-## Get an Authentication Token [/access?clientKey={clientKey}]
+## Get Authentication Token [/access?clientKey={clientKey}]
 
 + Parameters
-    + clientKey: 12345678 (required, string) - subscription client key as a string
+    + clientKey: b2c387ef05108049d8084ac09218393daf11 (required, string) - subscription client key as a string
 
 ### API Definition [GET]
 
 This method is used to get a token based on a valid client key. Clients will 
 receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
-The request should then contain:
+
+The URL should then contain the parameter:
 - a `String` value with the client key
 
 The response will contain:
 - a `String` value with an authorized token
-
-+ Request (application/json)
-
-        {
-            "ClientKey": "string"
-        }
 
 + Response 200 (application/json)
 
@@ -107,6 +102,7 @@ The response will contain:
 This method should be used to create a new dental practice. Besides some basic data
 about the practice we should get the practice AGB code and also an email for contact 
 purposes. It should be also provided the number of patients currently registered.
+
 The request should then contain:
 - Authorization Token
 - About the practice
@@ -120,7 +116,7 @@ The request should then contain:
 
 The response will contain:
 - a Result value 
- - *OK* in case of success or a `message` otherwise 
+ - `OK` in case of success or a `message` otherwise 
 - a Messages list 
   - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
@@ -154,7 +150,9 @@ The response will contain:
 
 ### API Definition [GET]
 
-This method is used to get detailed information about a practice.
+This method is used to get detailed information about the practice identified by 
+the AGB code given as parameter.
+
 The URL should then contain:
  - Authorization Token
  - Practice AGB code
@@ -183,6 +181,68 @@ The response will contain:
             "NrOfMedicines": "string",
             "NrOfMtiMessages": "string",
             "InformationDate": "string"
+        }
+
+## Get Practice Dentists [/practice/dentists/get?id={id}&token={token}]
+
++ Parameters
+    + id: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+This method is used to get detailed information about the dentists and assistents
+that work in the practice identified by the AGB code given as parameter.
+
+The URL should then contain:
+ - Authorization Token
+ - Practice AGB code
+
+The response will contain:
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
+- Practice AGB code 
+- a list of Dentists
+ - Initials
+ - Last Name
+ - Specialty
+ - Email
+ - BIG number
+ - AGB code
+ - KNMT number (if available)
+- a list of Assistents
+ - Initials
+ - Last Name
+ - Email
+
++ Response 200 (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "Dentists": [
+            {
+                "BigNumber": "string",
+                "AgbCode": "string",
+                "KnmtNumber": "string",
+                "Initials": "string",
+                "LastName": "string",
+                "Specialty": "string",
+                "Email": "string"
+            }
+            ],
+            "Assistents": [
+            {
+                "Initials": "string",
+                "LastName": "string",
+                "Email": "string"
+            }
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
         }
 
 ## Dentist Management  [/dentist]
