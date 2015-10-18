@@ -104,31 +104,29 @@ The response will contain:
 
 # Group Dental Practice API
 
-## Practice Management  [/practice]
+## Create Practice [/practice/create]
 
-### Create a new practice [POST]
+### API Definition [POST]
 
 This method should be used to create a new dental practice. Besides some basic data
 about the practice we should get the practice AGB code and also an email for contact 
 purposes. It should be also provided the number of patients currently registered.
 The request should then contain:
- - Authorization Token
- - About the practice
-   - AGB code
-   - Name
-   - Address
-   - Postal code
-   - City
-   - Email
-   - Number of patients
+- Authorization Token
+- About the practice
+ - AGB code
+ - Name
+ - Address
+ - Postal code
+ - City
+ - Email
+ - Number of patients
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
-
-**Usage:** `POST` to *https://api.meamedica.nl/practice*
+- a Result value 
+ - *OK* in case of success or a `message` otherwise 
+- a Messages list 
+  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
 + Request (application/json)
 
@@ -152,37 +150,32 @@ The response will contain:
             ]
         }
 
-### Get information about a pratice [GET]
+## Get Practice Information [/practice/get?id={id}&token={token}]
 
-This method is used to get detailed informationa about a practice.
-The request should then contain:
++ Parameters
+    + id: 12345678 (required, number) - practice AGB code as an 8-digit number,
+    + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+This method is used to get detailed information about a practice.
+The URL should then contain:
  - Authorization Token
  - Practice AGB code
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
- - and Practice information 
-   - Practice AGB code 
-   - Name
-   - Address
-   - Phone
-   - Kvk
-   - Date created (dd-mm-yyyy)
-   - Date of information (dd-mm-yyyy)
-
-**Usage:** `GET` from *https://api.meamedica.nl/patient?token=xyz&practiceagb=1&dentistagb=1&patientid=1*
-
-+ Request (application/json)
-
-        {
-            "Token": "string",
-            "PracticeAgb": "string",
-            "DentistAgb": "string",
-            "PatientId": "string"
-        }
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
+- and Practice information 
+ - Practice AGB code 
+ - Name
+ - Address
+ - Phone
+ - Kvk
+ - Date created (dd-mm-yyyy)
+ - Date of information (dd-mm-yyyy)
 
 + Response 200 (application/json)
 
@@ -195,7 +188,6 @@ The response will contain:
             "NrOfMtiMessages": "string",
             "InformationDate": "string"
         }
-
 
 ## Dentist Management  [/dentist]
 
