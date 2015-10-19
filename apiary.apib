@@ -249,36 +249,35 @@ The response will contain:
             ]
         }
 
-## Dentist Management  [/dentist]
+## Create Dentist/Assistent [/dentist/create]
 
-### Add dentists and/or assistents to a practice [POST]
+### API Definition [POST]
 
-This method is meant to add a list of dentists and or assistents to an existing
+This method is meant to add a list of dentists and/or assistents to an existing
 practice. There are two lists with data, one for the dentists and the other for 
-the assistents. The practice AGB code is required as matching identifier. The 
-request should then contain:
- - Authorization Token
- - Practice AGB code
- - About the dentists (a list of)
-   - BIG number
-   - AGB code
-   - KNMT number
-   - Initials
-   - Last name
-   - Specialty
-   - Email
- - About the assistents (a list of) (optional)
-   - Initials
-   - Last name
-   - Email
+the assistents. The practice AGB code is required as matching identifier. 
+
+The request should then contain:
+- Authorization Token
+- Practice AGB code
+- About the dentists (a list of)
+ - BIG number
+ - AGB code
+ - KNMT number
+ - Initials
+ - Last name
+ - Specialty
+ - Email
+- About the assistents (a list of) (optional)
+ - Initials
+ - Last name
+ - Email
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
-
-**Usage:** `POST` to *https://api.meamedica.nl/dentist*
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
 + Request (application/json)
 
@@ -314,35 +313,34 @@ The response will contain:
             ]
         }
 
-## Patient Management  [/patient]
+## Create Patient [/patient/create]
 
-### Create new patients for a practice [POST]
+### API Definition [POST]
 
 This method can be used to create one or more patients for a given practice. 
 It expects to receive data about the patients and about the practice were 
 they are registered as well as the dentist that they are assigned to.
+
 The request should then contain:
- - Authorization Token
- - Practice AGB code
- - About the patients (a list of) 
-   - Patient ID (in the client system)
-   - Dentist AGB code (this patient's dentist)
-   - Gender (m/f)
-   - Birthdate (dd-mm-yyyy)
-   - Height (in cm)
-   - Weight (in kg)
+- Authorization Token
+- Practice AGB code
+- About the patients (a list of) 
+ - Patient ID (in the client system)
+ - Dentist AGB code
+ - Gender (m/f)
+ - Birthdate (dd-mm-yyyy)
+ - Height (in cm)
+ - Weight (in kg)
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
- - a PatientInfo list with
-   - Patient ID (in the client system)
-   - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
-   - Activation URL (not applicable to `OK_ACTIVE`)
-
-**Usage:** `POST` to *https://api.meamedica.nl/patient*
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
+- a PatientInfo list with
+ - Patient ID (in the client system)
+ - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
+ - Activation URL (not applicable to `OK_ACTIVE`)
 
 + Request (application/json)
 
@@ -377,7 +375,15 @@ The response will contain:
             ]
         }
 
-### Load overview information about a patient [GET]
+## Get Patient Overview [/patient/getoverview?practiceagb={practiceagb}&dentistagb={dentistagb}&patientid={patientid}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + dentistagb: 54325432 (required, string) - dentist AGB code as an 8-digit number
+    + patientid: 1 (required, number) - patient identifier in client system
+    + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
+
+### API Definition [GET]
 
 This method is used to get an overview of some patient information.
 The request should then contain:
