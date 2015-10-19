@@ -375,7 +375,7 @@ The response will contain:
             ]
         }
 
-## Get Patient Overview [/patient/getoverview?practiceagb={practiceagb}&dentistagb={dentistagb}&patientid={patientid}&token={token}]
+## Get Patient Overview [/patient/overview/get?practiceagb={practiceagb}&dentistagb={dentistagb}&patientid={patientid}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -385,34 +385,25 @@ The response will contain:
 
 ### API Definition [GET]
 
-This method is used to get an overview of some patient information.
-The request should then contain:
- - Authorization Token
- - Practice AGB code
- - Dentist AGB code
- - Patient ID (in the client system)
+This method is used to get an overview of some patient information. The information
+will be given only if the patient belongs to the specified practice and dentist.
+
+The URL should then contain:
+- Authorization Token
+- Practice AGB code
+- Dentist AGB code
+- Patient ID (in the client system)
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - and Patient information 
-   - Dentist AGB code 
-   - Patient ID (in the client system)
-   - ASA Score
-   - Number of Medicines in use
-   - Number of MTI messages
-   - Date of information (dd-mm-yyyy)
-
-**Usage:** `GET` from *https://api.meamedica.nl/patient?token=xyz&practiceagb=1&dentistagb=1&patientid=1*
-
-+ Request (application/json)
-
-        {
-            "Token": "string",
-            "PracticeAgb": "string",
-            "DentistAgb": "string",
-            "PatientId": "string"
-        }
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- and Patient information 
+ - Dentist AGB code 
+ - Patient ID (in the client system)
+ - ASA Score
+ - Number of Medicines in use
+ - Number of MTI messages
+ - Date of information (dd-mm-yyyy)
 
 + Response 200 (application/json)
 
@@ -426,39 +417,38 @@ The response will contain:
             "InformationDate": "string"
         }
 
-## Subscription Management  [/subscription]
+## Create Subscription [/subscription/create]
 
-### Create a subscription and a payment model [POST]
+### API Definition [POST]
 
 This method is intended to assign subscription data to an existing practice. Besides
 the subscription data, there is also some payment and pricing information that 
 should be provided.
+
 The request should then contain:
- - Authorization Token
- - Practice AGB code
- - Description (optional)
- - License Type: **Y**early, **M**onthly, **A**uto renew monthly
- - Pricing Type: **S**tandalone, **I**ntegrated
- - Pricing Tier: **B**asic, **S**tandard, **P**remium
- - Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**ut. Incasso
+- Authorization Token
+- Practice AGB code
+- Description (optional)
+- License Type: **Y**early, **M**onthly, **A**uto renew monthly
+- Pricing Type: **S**tandalone, **I**ntegrated
+- Pricing Tier: **B**asic, **S**tandard, **P**remium
+- Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**ut. Incasso
 
 If Payment Type is a credit card (Mastercard, Visa):
- - Card Number
- - Card Year
- - Card Month
- - Card Code
- - Card Name
+- Card Number
+- Card Year
+- Card Month
+- Card Code
+- Card Name
  
 If Payment Type is a bank transfer or automatic debit:
- - Account Number
+- Account Number
 
 The response will contain:
- - a Result value 
-   - `OK` in case of success or a `message` otherwise 
- - a Messages list 
-   - the practice `AGB code` in case of success or a list of the `errors` that occurred
-
-**Usage:** `POST` to *https://api.meamedica.nl/subscription*
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
 
 + Request (application/json)
 
