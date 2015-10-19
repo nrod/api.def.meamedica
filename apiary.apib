@@ -163,7 +163,6 @@ The response will contain:
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 - and about the practice
- - Practice AGB code 
  - Name
  - Address
  - Phone
@@ -174,17 +173,16 @@ The response will contain:
 + Response 200 (application/json)
 
         {
-            "AgbCode": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ],
             "Name": "string",
             "Address": "string",
             "Phone": "string",
             "Kvk": "string",
             "DateCreated": "string",
-            "InformationDate": "string",
-            "Result": "string",
-            "Messages": [
-                "string"
-            ]
+            "InformationDate": "string"
         }
 
 ## Get Practice Dentists [/practice/dentists/get?id={id}&token={token}]
@@ -224,28 +222,27 @@ The response will contain:
 + Response 200 (application/json)
 
         {
-            "PracticeAgb": "string",
-            "Dentists": [
-            {
-                "BigNumber": "string",
-                "AgbCode": "string",
-                "KnmtNumber": "string",
-                "Initials": "string",
-                "LastName": "string",
-                "Specialty": "string",
-                "Email": "string"
-            }
-            ],
-            "Assistents": [
-            {
-                "Initials": "string",
-                "LastName": "string",
-                "Email": "string"
-            }
-            ],
             "Result": "string",
             "Messages": [
                 "string"
+            ],
+            "Dentists": [
+                {
+                    "BigNumber": "string",
+                    "AgbCode": "string",
+                    "KnmtNumber": "string",
+                    "Initials": "string",
+                    "LastName": "string",
+                    "Specialty": "string",
+                    "Email": "string"
+                }
+            ],
+            "Assistents": [
+                {
+                    "Initials": "string",
+                    "LastName": "string",
+                    "Email": "string"
+                }
             ]
         }
 
@@ -379,7 +376,7 @@ The response will contain:
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + dentistagb: 54325432 (required, string) - dentist AGB code as an 8-digit number
+    + dentistagb: 54325432 (required, number) - dentist AGB code as an 8-digit number
     + patientid: 1 (required, number) - patient identifier in client system
     + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
 
@@ -482,6 +479,6 @@ The response will contain:
 As a background note this API documentation is hosted at and was done using 
 [Apiary](https://apiary.io) and (some of) the resources used to describe 
 it can be found in the following URLs:
- - **API Blueprint Tutorial** : https://apiary.io/blueprint
- - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
- - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
+- **API Blueprint Tutorial** : https://apiary.io/blueprint
+- **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
+- **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
