@@ -393,8 +393,8 @@ The request should then contain:
 - Authorization Token
 - Practice AGB code
 - About the patients (a list of) 
- - Patient ID (in the client system)
- - Dentist AGB code
+ - Patient Number (in the client system)
+ - Dentist identifier (BIG, AGB or client-side id)
  - Gender (m/f)
  - Birthdate (dd-mm-yyyy)
  - Height (in cm)
@@ -406,9 +406,9 @@ The response will contain:
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 - a PatientInfo list with
- - Patient ID (in the client system)
- - Patient Status (`NOT_EXIST`, `OK_INACTIVE`, `OK_ACTIVE`)
- - Activation URL (not applicable to `OK_ACTIVE`)
+ - Patient Number (in the client system)
+ - Patient Status (`NEW`, `INACTIVE`, `ACTIVE`)
+ - Activation URL (only applicable to `NEW`, empty otherwise)
 
 + Request (application/json)
 
@@ -430,7 +430,7 @@ The response will contain:
 + Response 200 (application/json)
 
         {
-            "PatientInfo": [
+            "Patients": [
                 {
                   "PatientNr": "string",
                   "PatientStatus": "string",
