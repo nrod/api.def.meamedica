@@ -53,12 +53,13 @@ Added new Dental Practice methods (subscription, dentist). This last one replace
 partially the create practice method that is only to create the practice itself.
 
 ### v1.3.191015
-Added new method to get Dentists and/or Assistents from a Practice. 
+Added new method to get Dentists and/or Assistents in a Practice. 
 Internal optimizations and new documentation organization which includes new
 URLs for API methods.
 
 ### v1.4.121115
-Added new methods in Patient, Practice and Subscription. Revised token format
+Added new methods in Patient (Get) and Dentist (Get). Changed Subscription 
+(Create to Activate), added Modify and Get. Revised and improved token format: 
 now more suitable for use in an URL. Several internal optimizations and validations.
 
 # Group Common API
@@ -466,10 +467,10 @@ The response will contain:
 - Dentist identifier (BIG, AGB or client-side id) 
 - Patient Number (in the client system)
 - Patient overview information 
- - ASA Score
+ - Latest ASA Score
  - Number of Medicines in use
  - Number of MTI messages
- - Date of information (dd-mm-yyyy)
+- the date of this information (dd-mm-yyyy)
 - a Result value 
  - `OK` in case of success or a `message` otherwise 
 - a Messages list 
@@ -484,6 +485,67 @@ The response will contain:
             "NrOfMedicines": "string",
             "NrOfMtiMessages": "string",
             "InformationDate": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
+## Patient > Get [/patient/get?practiceagb={agb}&dentistid={did}&patientnr={pnr}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + dentistid: 54325432 (required, number) - BIG number, AGB code or client-side identifier
+    + patientnr: 1 (required, number) - patient identifier in client system
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+This method is used to get details about the given patient. The information
+will be given only if the patient belongs to the specified practice and dentist.
+
+The URL should then contain:
+- Authorization Token
+- Practice AGB code
+- Dentist identifier (BIG, AGB or client-side id)
+- Patient Number (in the client system)
+
+The response will contain:
+- Dentist identifier (BIG, AGB or client-side id) 
+- Patient Number (in the client system)
+- Patient overview information 
+ - First Name
+ - Last Name
+ - Birthdate
+ - Gender
+ - Blood Group
+ - Length
+ - Weight
+ - City
+ - Country
+ - Patient Status (`NEW`, `INACTIVE`, `ACTIVE`)
+- the date of this information (dd-mm-yyyy)
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
+ 
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "DentistId": "string",
+            "PatientNr": "string",
+            "FirstName": "string",
+            "LastName": "string",
+            "BirthDate": "string",
+            "Gender": "string",
+            "Bloodgroup": "string",
+            "Length": "string",
+            "Weight": "string",
+            "City": "string",
+            "Country": "string",
+            "PatientStatus": "string",
             "Result": "string",
             "Messages": [
                 "string"
