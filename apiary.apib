@@ -381,7 +381,7 @@ The response will contain:
             ]
         }
 
-## Create Patient [/patient/create]
+## Patient > Create [/patient/create]
 
 ### API Definition [POST]
 
@@ -413,33 +413,33 @@ The response will contain:
 + Request (application/json)
 
         {
-            "Token": "string",
             "PracticeAgb": "string",
             "Patients": [
                 {
-                  "PatientId": "string",
-                  "DentistAgb": "string",
+                  "PatientNr": "string",
+                  "DentistId": "string",
                   "Gender": "string",
                   "Birthdate": "string",
                   "Height": "string",
                   "Weight": "string"
                 }
-            ]
+            ],
+            "Token": "string"
         }
 
 + Response 200 (application/json)
 
         {
-            "Result": "string",
-            "Messages": [
-                "string"
-            ],
             "PatientInfo": [
                 {
-                  "PatientId": "string",
+                  "PatientNr": "string",
                   "PatientStatus": "string",
                   "ActivationUrl": "string"
                 }
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
             ]
         }
 
