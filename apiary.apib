@@ -194,11 +194,11 @@ The response will contain:
             ]
         }
 
-## Get Practice Dentists [/practice/dentists/get?id={id}&token={token}]
+## Get Practice Dentists [/practice/dentists/get?practiceAgb={agb}&token={token}]
 
 + Parameters
-    + id: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
 
@@ -221,20 +221,18 @@ The response will contain:
  - Specialty
  - Email
  - BIG number
- - AGB code
+ - AGB code (if available)
  - KNMT number (if available)
 - a list of Assistents
  - Initials
  - Last Name
  - Email
+- the date of this information (dd-mm-yyyy)
 
 + Response 200 (application/json)
 
         {
-            "Result": "string",
-            "Messages": [
-                "string"
-            ],
+            "InformationDate": "string",
             "Dentists": [
                 {
                     "BigNumber": "string",
@@ -252,7 +250,11 @@ The response will contain:
                     "LastName": "string",
                     "Email": "string"
                 }
-            ]
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
+            ],
         }
 
 ## Create Dentist/Assistent [/dentist/create]
