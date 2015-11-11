@@ -57,12 +57,16 @@ Added new method to get Dentists and/or Assistents from a Practice.
 Internal optimizations and new documentation organization which includes new
 URLs for API methods.
 
+### v1.4.121115
+Added new methods in Patient, Practice and Subscription. Revised token format
+now more suitable for use in an URL. Several internal optimizations and validations.
+
 # Group Common API
 
 ## Get Authentication Token [/access?clientKey={clientKey}]
 
 + Parameters
-    + clientKey: b2c387ef05108049d8084ac09218393daf11 (required, string) - subscription client key as a string
+    + clientKey: b2c38708d821833daf11 (required, string) - subscription client key as an encoded string
 
 ### API Definition [GET]
 
@@ -128,14 +132,14 @@ The response will contain:
 + Request (application/json)
 
         {
-            "Token": "string",
             "AgbCode": "string",
             "Name": "string",
             "Address": "string",
             "PostalCode": "string",
             "City": "string",
             "Email": "string",
-            "NumberOfPatients": 0
+            "NumberOfPatients": 0,
+            "Token": "string"
         }
 
 + Response 200 (application/json)
@@ -147,11 +151,11 @@ The response will contain:
             ]
         }
 
-## Get Practice Information [/practice/get?id={id}&token={token}]
+## Get Practice Information [/practice/get?practiceAgb={agb}&token={token}]
 
 + Parameters
-    + id: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + token: q1Ycm5BTp4f9qQV43fGgWIMSN348BYkTOJVzx5EI6qhLgtPhXvFEc16wO7Y00000 (required, string) - encrypted authentication token
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
 
