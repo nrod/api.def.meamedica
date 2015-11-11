@@ -561,18 +561,14 @@ The response will contain:
 
 ### API Definition [POST]
 
-This method is intended to assign subscription data to an existing practice. Besides
-the subscription data, there is also some payment and pricing information that 
-should be provided.
+This method is intended to activate a subscription for an existing practice. It
+requires information about the practice to activate, an administrative email address
+and the authorization token.
 
 The request should then contain:
 - Authorization Token
 - Practice AGB code
-- Description (optional)
-- License Type: **Y**early, **M**onthly, **A**uto renew monthly
-- Pricing Type: **S**tandalone, **I**ntegrated
-- Pricing Tier: **B**asic, **S**tandard, **P**remium
-- Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**ut. Incasso
+- Practice administrative email
 
 The response will contain:
 - a Result value 
