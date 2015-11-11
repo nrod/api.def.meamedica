@@ -589,18 +589,17 @@ The response will contain:
 
 ### API Definition [POST]
 
-This method is intended to assign subscription data to an existing practice. Besides
-the subscription data, there is also some payment and pricing information that 
-should be provided.
+This method is intended to modify an existing subscription. It requires the 
+practice AGB as an identifier and afterwards subscription data, payment and 
+pricing information.
 
 The request should then contain:
 - Authorization Token
 - Practice AGB code
 - Description (optional)
 - License Type: **Y**early, **M**onthly, **A**uto renew monthly
-- Pricing Type: **S**tandalone, **I**ntegrated
 - Pricing Tier: **B**asic, **S**tandard, **P**remium
-- Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**ut. Incasso
+- Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**utomatic Debit
 
 If Payment Type is a credit card (Mastercard, Visa):
 - Card Number
@@ -609,7 +608,7 @@ If Payment Type is a credit card (Mastercard, Visa):
 - Card Code
 - Card Name
  
-If Payment Type is a bank transfer or automatic debit:
+If Payment Type is an automatic debit:
 - Account Number
 
 The response will contain:
@@ -621,11 +620,9 @@ The response will contain:
 + Request (application/json)
 
         {
-            "Token": "string",
             "AgbCode": "string",
             "Description": "string",
             "LicenseType": "string",
-            "PricingType": "string",
             "PricingTier": "string",
             "PaymentType": "string",
             "CardNumber": "string",
@@ -633,12 +630,63 @@ The response will contain:
             "CardMonth": 0,
             "CardCode": 0,
             "CardName": "string",
-            "AccountNumber": "string"
+            "AccountNumber": "string",
+            "Token": "string"
         }
 
 + Response 200 (application/json)
 
         {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
+## Subscription > Get [/subscription/get?practiceagb={agb}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+This method is used to get details about the subscription assigned to the given 
+practice. The resulting information does not include any sensitive and/or financial 
+data. 
+
+The URL should then contain:
+- Authorization Token
+- Practice AGB code
+
+The response will contain:
+- Subscription information 
+ - Description
+ - Date created
+ - License Type
+ - License Date
+ - Discount
+ - Pricing Tier
+ - Price per Patient
+ - Payment Method
+- the date of this information (dd-mm-yyyy)
+- a Result value 
+ - `OK` in case of success or a `message` otherwise 
+- a Messages list 
+ - the practice `AGB code` in case of success or a list of the `errors` that occurred
+ 
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "Description": "string",
+            "DateCreated": "string",
+            "LicenseType": "string",
+            "LicenseDate": "string",
+            "Discount": "string",
+            "PricingTier": "string",
+            "PricePerPatient": "string",
+            "PaymentMethod": "string",
             "Result": "string",
             "Messages": [
                 "string"
