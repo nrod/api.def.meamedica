@@ -599,7 +599,7 @@ The request should then contain:
 - Description (optional)
 - License Type: **Y**early, **M**onthly, **A**uto renew monthly
 - Pricing Tier: **B**asic, **S**tandard, **P**remium
-- Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**utomatic Debit
+- Payment Type: **i**Deal, **M**asterCard, **V**isa, **B**ank transfer, **A**utomatic Debit
 
 If Payment Type is a credit card (Mastercard, Visa):
 - Card Number
@@ -662,13 +662,13 @@ The URL should then contain:
 The response will contain:
 - Subscription information 
  - Description
- - Date created
- - License Type: **Y**early, **M**onthly, **A**uto renew monthly
+ - Date created (dd-mm-yyyy)
+ - License Type: Yearly, Monthly, AutoRenew
  - License Date (dd-mm-yyyy)
  - Discount
- - Pricing Tier: **B**asic, **S**tandard, **P**remium
+ - Pricing Tier: Basic, Standard, Premium
  - Price per Patient (eur)
- - Payment Type: **i**Deal, **M**astercard, **V**isa, **B**ank transfer, **A**utomatic Debit
+ - Payment Type: iDeal, MasterCard, Visa, Bank transfer, Automatic Debit
 - the date of this information (dd-mm-yyyy)
 - a Result value 
  - `OK` in case of success or a `message` otherwise 
