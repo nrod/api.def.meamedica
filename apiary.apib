@@ -330,13 +330,13 @@ The response will contain:
 
 ### API Definition [GET]
 
-This method is used to get detailed information about the dentist or assistend 
-identified by the BIG number (only dentists) given. Alternatively the AGB code
-can also be used as parameter or a client-side identifier.
+This method is used to get detailed information about the dentist or assistent given. 
+A dentist can be identified by the BIG number, AGB code or a client-side identifier.
+An assistent can only be specified as a client-side identifier.
 
 The URL should then contain:
  - Authorization token
- - Dentist identifier (BIG, AGB or client-side id)
+ - Dentist (BIG, AGB or client-side id) or assistant (client-side id) identifier
 
 The response will contain:
 - a Result value 
@@ -344,7 +344,7 @@ The response will contain:
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 - the Practice AGB code 
-- a list of Dentists
+- a Dentist (Assistant should be empty)
  - Initials
  - Last Name
  - Specialty
@@ -352,7 +352,7 @@ The response will contain:
  - BIG number
  - AGB code (if available)
  - KNMT number (if available)
-- a list of Assistents
+- an Assistent (Dentist should be empty)
  - Initials
  - Last Name
  - Email
