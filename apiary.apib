@@ -53,7 +53,7 @@ Added new Dental Practice methods (subscription, dentist). This last one replace
 partially the create practice method that is only to create the practice itself.
 
 ### v1.3.191015
-Added new method to get Dentists and/or Assistents in a Practice. 
+Added new method to get Dentists and/or Assistants in a Practice. 
 Internal optimizations and new documentation organization which includes new
 URLs for API methods.
 
@@ -203,7 +203,7 @@ The response will contain:
 
 ### API Definition [GET]
 
-This method is used to get detailed information about the dentists and assistents
+This method is used to get detailed information about the dentists and assistants
 that work in the practice identified by the AGB code given as parameter.
 
 The URL should then contain:
@@ -224,7 +224,7 @@ The response will contain:
  - BIG number
  - AGB code (if available)
  - KNMT number (if available)
-- a list of Assistents
+- a list of Assistants
  - Initials
  - Last Name
  - Email
@@ -245,7 +245,7 @@ The response will contain:
                     "Email": "string"
                 }
             ],
-            "Assistents": [
+            "Assistants": [
                 {
                     "Initials": "string",
                     "LastName": "string",
@@ -262,9 +262,9 @@ The response will contain:
 
 ### API Definition [POST]
 
-This method is meant to add a list of dentists and/or assistents to an existing
+This method is meant to add a list of dentists and/or assistants to an existing
 practice. There are two lists with data, one for the dentists and the other for 
-the assistents. The practice AGB code is required as matching identifier. 
+the assistants. The practice AGB code is required as matching identifier. 
 
 The request should then contain:
 - Authorization Token
@@ -277,7 +277,7 @@ The request should then contain:
  - Last name
  - Specialty
  - Email
-- About the assistents (a list of) (optional)
+- About the assistants (a list of) (optional)
  - Initials
  - Last name
  - Email
@@ -303,7 +303,7 @@ The response will contain:
                   "Email": "string"
                 }
             ],
-            "Assistents": [
+            "Assistants": [
                 {
                   "Initials": "string",
                   "LastName": "string",
@@ -330,9 +330,9 @@ The response will contain:
 
 ### API Definition [GET]
 
-This method is used to get detailed information about the dentist or assistent given. 
+This method is used to get detailed information about the dentist or assistant given. 
 A dentist can be identified by the BIG number, AGB code or a client-side identifier.
-An assistent can only be specified as a client-side identifier.
+An assistant can only be specified as a client-side identifier.
 
 The URL should then contain:
  - Authorization token
@@ -352,7 +352,7 @@ The response will contain:
  - BIG number
  - AGB code (if available)
  - KNMT number (if available)
-- an Assistent (Dentist should be empty)
+- an Assistant (Dentist should be empty)
  - Initials
  - Last Name
  - Email
@@ -371,7 +371,7 @@ The response will contain:
                 "Specialty": "string",
                 "Email": "string"
             },
-            "Assistent": {
+            "Assistant": {
                 "Initials": "string",
                 "LastName": "string",
                 "Email": "string"
