@@ -133,7 +133,7 @@ The response will contain:
 + Request (application/json)
 
         {
-            "AgbCode": "string",
+            "PracticeAgb": "string",
             "Name": "string",
             "Address": "string",
             "PostalCode": "string",
@@ -152,7 +152,7 @@ The response will contain:
             ]
         }
 
-## Practice > Get Information [/practice/get?practiceAgb={agb}&token={token}]
+## Practice > Get Information [/practice/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -195,7 +195,7 @@ The response will contain:
             ]
         }
 
-## Practice > Get Dentists [/practice/dentists/get?practiceAgb={agb}&token={token}]
+## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -225,6 +225,7 @@ The response will contain:
  - AGB code (if available)
  - KNMT number (if available)
 - a list of Assistants
+ - Assistant identifier
  - Initials
  - Last Name
  - Email
@@ -247,6 +248,7 @@ The response will contain:
             ],
             "Assistants": [
                 {
+                    "AssistantId": "string",
                     "Initials": "string",
                     "LastName": "string",
                     "Email": "string"
@@ -271,13 +273,14 @@ The request should then contain:
 - Practice AGB code
 - About the dentists (a list of)
  - BIG number
- - AGB code
+ - Dentist identifier
  - KNMT number
  - Initials
  - Last name
  - Specialty
  - Email
 - About the assistants (a list of) (optional)
+ - Assistant identifier
  - Initials
  - Last name
  - Email
@@ -295,7 +298,7 @@ The response will contain:
             "Dentists": [
                 {
                   "BigNumber": "string",
-                  "AgbCode": "string",
+                  "DentistId": "string",
                   "KnmtNumber": "string",
                   "Initials": "string",
                   "LastName": "string",
@@ -305,6 +308,7 @@ The response will contain:
             ],
             "Assistants": [
                 {
+                  "AssistantId": "string",
                   "Initials": "string",
                   "LastName": "string",
                   "Email": "string"
@@ -322,9 +326,10 @@ The response will contain:
             ]
         }
 
-## Dentist > Get Information [/dentist/get?dentistId={did}&token={token}]
+## Dentist > Get Information [/dentist/get?practiceAgb={practiceAgb}&dentistId={dentistId}&token={token}]
 
 + Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
     + dentistId: 12345678 (required, number) - BIG number, AGB code or client-side identifier
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
@@ -353,6 +358,7 @@ The response will contain:
  - AGB code (if available)
  - KNMT number (if available)
 - an Assistant (Dentist should be empty)
+ - Assistant identifier
  - Initials
  - Last Name
  - Email
@@ -364,7 +370,7 @@ The response will contain:
             "InformationDate": "string",
             "Dentist": {
                 "BigNumber": "string",
-                "AgbCode": "string",
+                "DentistId": "string",
                 "KnmtNumber": "string",
                 "Initials": "string",
                 "LastName": "string",
@@ -372,6 +378,7 @@ The response will contain:
                 "Email": "string"
             },
             "Assistant": {
+                "AssistantId": "string",
                 "Initials": "string",
                 "LastName": "string",
                 "Email": "string"
@@ -444,11 +451,10 @@ The response will contain:
             ]
         }
 
-## Patient > Get Overview [/patient/overview/get?practiceagb={agb}&dentistid={did}&patientnr={pnr}&token={token}]
+## Patient > Get Overview [/patient/overview/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + dentistid: 54325432 (required, number) - BIG number, AGB code or client-side identifier
     + patientnr: 1 (required, number) - patient identifier in client system
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
@@ -460,7 +466,6 @@ will be given only if the patient belongs to the specified practice and dentist.
 The URL should then contain:
 - Authorization Token
 - Practice AGB code
-- Dentist identifier (BIG, AGB or client-side id)
 - Patient Number (in the client system)
 
 The response will contain:
@@ -491,11 +496,10 @@ The response will contain:
             ]
         }
         
-## Patient > Get Information [/patient/get?practiceagb={agb}&dentistid={did}&patientnr={pnr}&token={token}]
+## Patient > Get Information [/patient/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + dentistid: 54325432 (required, number) - BIG number, AGB code or client-side identifier
     + patientnr: 1 (required, number) - patient identifier in client system
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
@@ -507,7 +511,6 @@ will be given only if the patient belongs to the specified practice and dentist.
 The URL should then contain:
 - Authorization Token
 - Practice AGB code
-- Dentist identifier (BIG, AGB or client-side id)
 - Patient Number (in the client system)
 
 The response will contain:
@@ -552,7 +555,7 @@ The response will contain:
             ]
         }
 
-## Subscription > Activate [/subscription/activate?practiceagb={agb}&email={email}&token={token}]
+## Subscription > Activate [/subscription/activate?practiceagb={practiceagb}&email={email}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -620,7 +623,7 @@ The response will contain:
 + Request (application/json)
 
         {
-            "AgbCode": "string",
+            "PracticeAgb": "string",
             "Description": "string",
             "LicenseType": "string",
             "PricingTier": "string",
@@ -686,7 +689,7 @@ The response will contain:
             "Discount": "string",
             "PricingTier": "string",
             "PricePerPatient": "string",
-            "PaymentMethod": "string",
+            "PaymentType": "string",
             "Result": "string",
             "Messages": [
                 "string"
