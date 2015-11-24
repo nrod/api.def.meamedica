@@ -520,16 +520,17 @@ The URL should then contain:
 The response will contain:
 - Patient Number (in the client system)
 - Patient overview information 
- - First Name
- - Last Name
  - Birthdate
  - Gender
- - Blood Group
  - Length
  - Weight
+ - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
+- And if available:
+ - First Name
+ - Last Name
+ - Blood Group
  - City
  - Country
- - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - the date of this information (dd-mm-yyyy)
 - a Result value 
  - `OK` in case of success or a `message` otherwise 
@@ -540,7 +541,6 @@ The response will contain:
 
         {
             "InformationDate": "string",
-            "DentistId": "string",
             "PatientNr": "string",
             "FirstName": "string",
             "LastName": "string",
