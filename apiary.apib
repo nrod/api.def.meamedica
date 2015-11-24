@@ -401,14 +401,13 @@ The response will contain:
 
 This method can be used to create one or more patients for a given practice. 
 It expects to receive data about the patients and about the practice were 
-they are registered as well as the dentist that they are assigned to.
+they are registered.
 
 The request should then contain:
 - Authorization Token
 - Practice AGB code
 - About the patients (a list of) 
  - Patient Number (in the client system)
- - Dentist identifier (BIG, AGB or client-side id)
  - Gender (m/f)
  - Birthdate (dd-mm-yyyy)
  - Height (in cm)
