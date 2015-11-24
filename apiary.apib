@@ -518,7 +518,6 @@ The URL should then contain:
 - Patient Number (in the client system)
 
 The response will contain:
-- Dentist identifier (BIG, AGB or client-side id) 
 - Patient Number (in the client system)
 - Patient overview information 
  - First Name
@@ -530,7 +529,7 @@ The response will contain:
  - Weight
  - City
  - Country
- - Patient Status (`NEW`, `INACTIVE`, `ACTIVE`)
+ - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - the date of this information (dd-mm-yyyy)
 - a Result value 
  - `OK` in case of success or a `message` otherwise 
