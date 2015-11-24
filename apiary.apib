@@ -227,9 +227,8 @@ The response will contain:
  - Initials
  - Last Name
  - Specialty
- - Email
+ - Email (if available)
  - BIG number
- - AGB code (if available)
  - KNMT number (if available)
 - a list of Assistants
  - Assistant identifier
@@ -244,8 +243,8 @@ The response will contain:
             "InformationDate": "string",
             "Dentists": [
                 {
+                    "DentistId": "string",
                     "BigNumber": "string",
-                    "AgbCode": "string",
                     "KnmtNumber": "string",
                     "Initials": "string",
                     "LastName": "string",
