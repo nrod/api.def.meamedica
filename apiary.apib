@@ -224,17 +224,18 @@ The response will contain:
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 - the Practice AGB code 
 - a list of Dentists
+ - Dentist identifier
+ - BIG number (if available)
+ - KNMT number (if available)
  - Initials
  - Last Name
  - Specialty
  - Email (if available)
- - BIG number
- - KNMT number (if available)
 - a list of Assistants
  - Assistant identifier
  - Initials
  - Last Name
- - Email
+ - Email (if available)
 - the date of this information (dd-mm-yyyy)
 
 + Response 200 (application/json)
@@ -278,18 +279,18 @@ The request should then contain:
 - Authorization Token
 - Practice AGB code
 - About the dentists (a list of)
- - BIG number
  - Dentist identifier
- - KNMT number
+ - BIG number (optional)
+ - KNMT number (optional)
  - Initials
  - Last name
  - Specialty
- - Email
+ - Email (optional)
 - About the assistants (a list of) (optional)
  - Assistant identifier
  - Initials
  - Last name
- - Email
+ - Email (optional)
 
 The response will contain:
 - a Result value 
@@ -303,8 +304,8 @@ The response will contain:
             "PracticeAgb": "string",
             "Dentists": [
                 {
-                  "BigNumber": "string",
                   "DentistId": "string",
+                  "BigNumber": "string",
                   "KnmtNumber": "string",
                   "Initials": "string",
                   "LastName": "string",
@@ -342,12 +343,11 @@ The response will contain:
 ### API Definition [GET]
 
 This method is used to get detailed information about the dentist or assistant given. 
-A dentist can be identified by the BIG number, AGB code or a client-side identifier.
-An assistant can only be specified as a client-side identifier.
+A dentist or an assistant should be identified their client-side identifier.
 
 The URL should then contain:
  - Authorization token
- - Dentist (BIG, AGB or client-side id) or assistant (client-side id) identifier
+ - Dentist or Assistant identifier
 
 The response will contain:
 - a Result value 
@@ -356,18 +356,18 @@ The response will contain:
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
 - the Practice AGB code 
 - a Dentist (Assistant should be empty)
+ - Dentist identifier
+ - BIG number (if available)
+ - KNMT number (if available)
  - Initials
  - Last Name
  - Specialty
- - Email
- - BIG number
- - AGB code (if available)
- - KNMT number (if available)
+ - Email (if available)
 - an Assistant (Dentist should be empty)
  - Assistant identifier
  - Initials
  - Last Name
- - Email
+ - Email (if available)
 - the date of this information (dd-mm-yyyy)
 
 + Response 200 (application/json)
@@ -375,8 +375,8 @@ The response will contain:
         {
             "InformationDate": "string",
             "Dentist": {
-                "BigNumber": "string",
                 "DentistId": "string",
+                "BigNumber": "string",
                 "KnmtNumber": "string",
                 "Initials": "string",
                 "LastName": "string",
