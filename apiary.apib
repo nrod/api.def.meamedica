@@ -563,14 +563,9 @@ The response will contain:
             ]
         }
 
-## Patient > Close [/patient/close?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Close [/patient/close]
 
-+ Parameters
-    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + patientnr: 1 (required, number) - patient identifier in client system
-    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
-
-### API Definition [GET]
+### API Definition [POST]
 
 This method is used to close the activity of a patient inline with the client system.
 The operation will be executed only if the patient belongs to the specified practice.
@@ -585,7 +580,15 @@ The response will contain:
  - `OK` in case of success or a `message` otherwise 
 - a Messages list 
  - the practice `AGB code` in case of success or a list of the `errors` that occurred
- 
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "PatientNr": "string",
+            "Token": "string"
+        }
+        
 + Response 200 (application/json)
 
         {
