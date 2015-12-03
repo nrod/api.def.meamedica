@@ -76,25 +76,22 @@ New method to Close patient activity.
 
 # Group Common API
 
-## Authentication > Create Token [/access/gettoken]
+## Authentication > Get Token [/access/get?clientKey={clientKey}]
 
-### API Definition [POST]
++ Parameters
+    + clientKey: b2c38708d821833daf11 (required, string) - subscription client key as an encoded string
+
+### API Definition [GET]
 
 This method is used to get a token based on a valid client key. Clients will 
 receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
 
-The request should then contain:
+The URL should then contain the parameter:
 - the client key
 
 The response will contain:
 - an authorized and encrypted token
-
-+ Request (application/json)
-
-        {
-            "ClientKey ": "string"
-        }
 
 + Response 200 (application/json)
 
