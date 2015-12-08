@@ -83,15 +83,19 @@ New method to Close patient activity.
 
 ### API Definition [GET]
 
+***Description***
+
 This method is used to get a token based on a valid client key. Clients will 
 receive their client key when they subscribe to this API service. This token must
 then be used in all other requests to API methods here described.
 
-The URL should then contain the parameter:
-- the client key
+***Usage and Results***
 
-The response will contain:
-- an authorized and encrypted token
+The URL must contain the `clientKey` parameter while the response will have
+an authorized and encrypted `token`, such as e.g. 
+*xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===* or
+one message from the list below:
+- *Unauthorized access.*
 
 + Response 200 (application/json)
 
@@ -102,6 +106,8 @@ The response will contain:
 ## Current Version > Get [/version]
 
 ### API Definition [GET]
+
+***Description***
 
 This method is used to get the current version of this API mainly for informative
 purposes. Nothing is expected in the request or as an URL parameter.
@@ -120,6 +126,8 @@ The response will contain:
 ## Practice > Create [/practice/create]
 
 ### API Definition [POST]
+
+***Description***
 
 This method should be used to create a new dental practice. Besides some basic data
 about the practice we should get the practice AGB code and also an email for contact 
@@ -172,6 +180,8 @@ The response will contain:
 
 ### API Definition [GET]
 
+***Description***
+
 This method is used to get detailed information about the practice identified by 
 the AGB code given as parameter.
 
@@ -214,6 +224,8 @@ The response will contain:
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
+
+***Description***
 
 This method is used to get detailed information about the dentists and assistants
 that work in the practice identified by the AGB code given as parameter.
@@ -275,6 +287,8 @@ The response will contain:
 ## Dentist > Create [/dentist/create]
 
 ### API Definition [POST]
+
+***Description***
 
 This method is meant to add a list of dentists and/or assistants to an existing
 practice. There are two lists with data, one for the dentists and the other for 
@@ -347,6 +361,8 @@ The response will contain:
 
 ### API Definition [GET]
 
+***Description***
+
 This method is used to get detailed information about the dentist or assistant given. 
 A dentist or an assistant should be identified their client-side identifier.
 
@@ -403,6 +419,8 @@ The response will contain:
 ## Patient > Create [/patient/create]
 
 ### API Definition [POST]
+
+***Description***
 
 This method can be used to create one or more patients for a given practice. 
 It expects to receive some generic data about the patients and about the 
@@ -469,6 +487,8 @@ The response will contain:
 
 ### API Definition [GET]
 
+***Description***
+
 This method is used to get an overview of some patient information. The information
 will be given only if the patient belongs to the specified practice and dentist.
 
@@ -513,6 +533,8 @@ The response will contain:
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
+
+***Description***
 
 This method is used to get details about the given patient. The information
 will be given only if the patient belongs to the specified practice and dentist.
@@ -567,6 +589,8 @@ The response will contain:
 
 ### API Definition [POST]
 
+***Description***
+
 This method is used to close the activity of a patient inline with the client system.
 The operation will be executed only if the patient belongs to the specified practice.
 
@@ -607,6 +631,8 @@ The response will contain:
 
 ### API Definition [POST]
 
+***Description***
+
 This method is intended to activate a subscription for an existing practice. It
 requires information about the practice to activate, an administrative email address
 and the authorization token.
@@ -634,6 +660,8 @@ The response will contain:
 ## Subscription > Modify [/subscription/modify]
 
 ### API Definition [POST]
+
+***Description***
 
 This method is intended to modify an existing subscription. It requires the 
 practice AGB as an identifier and afterwards subscription data, payment and 
@@ -696,6 +724,8 @@ The response will contain:
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
+
+***Description***
 
 This method is used to get details about the subscription assigned to the given 
 practice. The resulting information does not include any sensitive and/or financial 
