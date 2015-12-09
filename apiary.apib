@@ -86,8 +86,9 @@ New method to Close patient activity.
 ***Description***
 
 This method is used to get a token based on a valid client key. Clients will 
-receive their client key when they subscribe to this API service. This token must
-then be used in all other requests to API methods here described.
+receive their client key when they have an agreement to use this API service. 
+This token must then be used in all other requests to API methods here described
+(search for the `token` keyword).
 
 ***Usage and Results***
 
@@ -112,8 +113,10 @@ one message from the list below:
 This method is used to get the current version of this API mainly for informative
 purposes. Nothing is expected in the request or as an URL parameter.
 
-The response will contain:
-- the current version 
+***Usage and Results***
+
+No input is necessary to call this method so the response will just show the 
+current version. No other possible values can be given.
 
 + Response 200 (application/json)
 
@@ -133,22 +136,17 @@ This method should be used to create a new dental practice. Besides some basic d
 about the practice we should get the practice AGB code and also an email for contact 
 purposes. It should be also provided the number of patients currently registered.
 
-The request should then contain:
-- Authorization token
-- About the practice
- - AGB code
- - Name
- - Address
- - Postal code
- - City
- - Email
- - Number of patients
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
-  - the practice `AGB code` in case of success or a list of the `errors` that occurred
+The request to create a new practice must contain the `token` and some information
+about the practice:
+- Unique identifier - AGB code
+- Name and number of patients plus an administrative email
+- Geographic location - Address, Postal code, City
+
+The response will contain a Result value and a Messages list value. 
+`OK` in case of success or a `message` otherwise 
+the practice `AGB code` in case of success or a list of the `errors` that occurred
 
 + Request (application/json)
 
