@@ -396,7 +396,7 @@ A dentist or an assistant should be identified their client-side identifier.
 
 ***Usage and Results***
 
-The request must contain the `token`, the practice `AGB code` and dentist/assistant 
+The request must contain the `token`, the practice `AGB code` and the dentist/assistant 
 `identifier`.
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
@@ -533,26 +533,36 @@ In case of error, the `Result` field will have one of:
 ***Description***
 
 This method is used to get an overview of some patient information. The information
-will be given only if the patient belongs to the specified practice and dentist.
+will be given only if the patient belongs to the specified practice.
 
-The URL should then contain:
-- Authorization Token
-- Practice AGB code
-- Patient Number (in the client system)
+***Usage and Results***
 
-The response will contain:
-- Dentist identifier 
-- Patient Number (in the client system)
-- Patient overview information 
- - Latest ASA Score
- - Number of Medicines in use
- - Number of MTI messages
-- the date of this information (dd-mm-yyyy)
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
- 
+The request must contain the `token`, the practice `AGB code` and the patient 
+`identifier`.
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code and the information found about the 
+patient is also returned.
+- Patient identifier
+- Latest ASA score, Number of medicines in use
+- Number of MTI messages, Allergic to anesthesia
+- Date when this request was issued ( *dd-mm-yyyy* )
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Patient.NotFound*
+- *Unexpected.Error*
+
 + Response 200 (application/json)
 
         {
@@ -561,6 +571,7 @@ The response will contain:
             "AsaScore": "string",
             "NrOfMedicines": "string",
             "NrOfMtiMessages": "string",
+            "AnesthesiaAllergy": "string",
             "InformationDate": "string",
             "Result": "string",
             "Messages": [
