@@ -94,9 +94,14 @@ This token must then be used in all other requests to API methods here described
 
 The URL must contain the `clientKey` parameter while the response will have
 an authorized and encrypted `token`, such as e.g. 
-*xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===* or
-one message from the list below:
+*xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
+in the field with the same name, `Token`. 
+
+***Error Codes***
+
+In case of error, the `Token` field will have one of:
 - *Unauthorized access.*
+- *An unexpected error has occurred.*
 
 + Response 200 (application/json)
 
@@ -116,7 +121,7 @@ purposes. Nothing is expected in the request or as an URL parameter.
 ***Usage and Results***
 
 No input is necessary to call this method so the response will just show the 
-current version. No other possible values can be given.
+current version. No other possible values can be given. No errors should occur.
 
 + Response 200 (application/json)
 
@@ -144,9 +149,13 @@ about the practice:
 - Name and number of patients plus an administrative email
 - Geographic location - Address, Postal code, City
 
-The response will contain a Result value and a Messages list value. 
-`OK` in case of success or a `message` otherwise 
-the practice `AGB code` in case of success or a list of the `errors` that occurred
+The response will contain a `Result` field with **OK** and the practice AGB Code in the
+`Messages` field. 
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Unauthorized access.*
 
 + Request (application/json)
 
