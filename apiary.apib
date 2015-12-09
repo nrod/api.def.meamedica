@@ -805,28 +805,21 @@ The response will contain:
 
 This method is used to get details about the subscription assigned to the given 
 practice. The resulting information does not include any sensitive and/or financial 
-data. 
+data.
 
-The URL should then contain:
-- Authorization Token
-- Practice AGB code
+***Usage and Results***
 
-The response will contain:
-- Subscription information 
- - Description
- - Date created (dd-mm-yyyy)
- - License Type: Yearly, Monthly, AutoRenew
- - License Date (dd-mm-yyyy)
- - Discount
- - Pricing Tier: Basic, Standard, Premium
- - Price per Patient (eur)
- - Payment Type: iDeal, MasterCard, Visa, Bank transfer, Automatic Debit
-- the date of this information (dd-mm-yyyy)
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
- 
+The request must contain the `token` and the practice `AGB code`.
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code and the information found about the 
+subscription is also returned.
+- Description and Date created ( *dd-mm-yyyy* )
+- License Type (`Yearly`, `Monthly`, `AutoRenew`) and License Date ( *dd-mm-yyyy* )
+- Pricing Tier (`Basic`, `Standard`, `Premium`) and Price per Patient ( *eur* )
+- Payment Type (`iDeal`, `MasterCard`, `Visa`, `Bank transfer`, `Automatic Debit`) and Discount
+- Date when this request was issued ( *dd-mm-yyyy* )
+
 + Response 200 (application/json)
 
         {
