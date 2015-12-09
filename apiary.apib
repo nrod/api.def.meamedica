@@ -92,7 +92,7 @@ This token must then be used in all other requests to API methods here described
 
 ***Usage and Results***
 
-The URL must contain the `clientKey` parameter while the response will have
+The request must contain the `clientKey` parameter while the response will have
 an authorized and encrypted `token`, such as e.g. 
 *xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
 in the field with the same name, `Token`. 
@@ -143,8 +143,7 @@ purposes. It should be also provided the number of patients currently registered
 
 ***Usage and Results***
 
-The request to create a new practice must contain the `token` and some information
-about the practice:
+The request must contain the `token` and some information about the practice:
 - Unique identifier - AGB code
 - Name and number of patients plus an administrative email
 - Geographic location - Address, Postal code, City
@@ -200,14 +199,13 @@ the AGB code given as parameter.
 
 ***Usage and Results***
 
-The request to get information about a practice must contain the `token` and the 
-pracice AGB code.
+The request must contain the `token` and the practice `AGB code`.
 
 The response will contain a `Result` field with **OK** and the practice AGB Code in the
 `Messages` field plus the information found about the practice.
 - Name, Contact and KVK number
 - Geographic location - Address, Postal code, City
-- Date of creation and date when this request was issued (dd-mm-yyyy)
+- Date of creation and date when this request was issued ( *dd-mm-yyyy* )
 
 ***Error Codes***
 
@@ -216,8 +214,11 @@ In case of error, the `Result` field will have one of:
 - *Unauthorized access.*
 - *Invalid token provided.*
 - *Missing parameters.*
-- *Practice.Exists*
-- *Practice.NotAdded*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
 - *An unexpected error has occurred.*
 
 + Response 200 (application/json)
@@ -248,30 +249,30 @@ In case of error, the `Result` field will have one of:
 This method is used to get detailed information about the dentists and assistants
 that work in the practice identified by the AGB code given as parameter.
 
-The URL should then contain:
- - Authorization token
- - Practice AGB code
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
-- the Practice AGB code 
-- a list of Dentists
- - Dentist identifier
- - BIG number (if available)
- - KNMT number (if available)
- - Initials
- - Last Name
- - Specialty
- - Email (if available)
-- a list of Assistants
- - Assistant identifier
- - Initials
- - Last Name
- - Email (if available)
-- the date of this information (dd-mm-yyyy)
+The request must contain the `token` and the practice `AGB code`.
+
+The response will contain a `Result` field with **OK** and the practice AGB Code in the
+`Messages` field plus the information found about the dentists and/or assistants.
+- Dentist identifier, Initials, Lastname and Specialty
+- Email, BIG number and KNMT number (if available)
+- Assistant identifier, Initials, Lastname and Email (if available)
+- Date when this request was issued ( *dd-mm-yyyy* )
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Token is missing.*
+- *Unauthorized access.*
+- *Invalid token provided.*
+- *Missing parameters.*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *An unexpected error has occurred.*
 
 + Response 200 (application/json)
 
