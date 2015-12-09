@@ -92,9 +92,8 @@ This token must then be used in all other requests to API methods here described
 
 ***Usage and Results***
 
-The request must contain the `clientKey` parameter while the response will have
-an authorized and encrypted `token`, such as e.g. 
-*xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
+The request must contain the `clientKey`. The response will be an authorized and 
+encrypted `token`, such as e.g. *xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
 in the field with the same name, `Token`. 
 
 ***Error Codes***
@@ -339,8 +338,11 @@ In case of error, the `Result` field will have one of:
 - *Subscription.Expired*
 - *Subscription.NoPaymentInfo*
 - *Subscription.NotPaid*
-- *Dentist.NotFound*
-- *Customer.NotFound*
+- *Customer.NotAdded*
+- *Customer.Duplicate*
+- *Dentist.NotAdded*
+- *Dentist.Exists*
+- *Dentist.NoSpecialty*
 - *Unexpected.Error*
 
 + Request (application/json)
@@ -395,7 +397,7 @@ A dentist or an assistant should be identified their client-side identifier.
 ***Usage and Results***
 
 The request must contain the `token`, the practice `AGB code` and dentist/assistant 
-identifier.
+`identifier`.
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code and the information found about the 
@@ -417,6 +419,8 @@ In case of error, the `Result` field will have one of:
 - *Subscription.Expired*
 - *Subscription.NoPaymentInfo*
 - *Subscription.NotPaid*
+- *Dentist.NotFound*
+- *Customer.NotFound*
 - *Unexpected.Error*
 
 + Response 200 (application/json)
@@ -454,25 +458,33 @@ This method can be used to create one or more patients for a given practice.
 It expects to receive some generic data about the patients and about the 
 practice were they are registered.
 
-The request should then contain:
-- Authorization Token
-- Practice AGB code
-- About the patients (a list of) 
- - Patient Number (in the client system)
- - Gender (m/f)
- - Birthdate (dd-mm-yyyy)
- - Height (in cm)
- - Weight (in kg)
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
-- a PatientInfo list with
- - Patient Number (in the client system)
- - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
- - Activation URL (only applicable to `Patient.New`, empty otherwise)
+The request must contain the `token`, the practice `AGB code` and some information 
+about the patient to create.
+- Patient identifier, Gender (m/f) and Birthdate ( *dd-mm-yyyy* )
+- Height (in cm) and Weight (in kg)
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code and a list with information about the
+patient is also returned. 
+- Patient Number (in the client system)
+- Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
+- Activation URL (only applicable to `Patient.New`, empty otherwise)
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Unexpected.Error*
 
 + Request (application/json)
 
