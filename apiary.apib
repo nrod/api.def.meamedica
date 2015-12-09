@@ -652,16 +652,13 @@ In case of error, the `Result` field will have one of:
 This method is used to close the activity of a patient inline with the client system.
 The operation will be executed only if the patient belongs to the specified practice.
 
-The URL should then contain:
-- Authorization Token
-- Practice AGB code
-- Patient Number (in the client system)
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
+The request must contain the `token`, the practice `AGB code` and the patient 
+`identifier`.
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code.
 
 + Request (application/json)
 
