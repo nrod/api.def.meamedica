@@ -150,7 +150,7 @@ The request must contain the `token` and some information about the practice:
 - Geographic location - Address, Postal code, City
 
 The response will contain a `Result` field with **OK** and the practice AGB Code in the
-`Messages` field. 
+`Messages` field or an error code.
 
 ***Error Codes***
 
@@ -254,8 +254,9 @@ that work in the practice identified by the AGB code given as parameter.
 
 The request must contain the `token` and the practice `AGB code`.
 
-The response will contain a `Result` field with **OK** and the practice AGB Code in the
-`Messages` field plus the information found about the dentists and/or assistants.
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code the information found about the dentists
+and/or assistants is also returned. 
 - Dentist identifier, Initials, Lastname and Specialty
 - Email, BIG number and KNMT number (if available)
 - Assistant identifier, Initials, Lastname and Email (if available)
@@ -314,9 +315,18 @@ This method is meant to add a list of dentists and/or assistants to an existing
 practice. There are two lists with data, one for the dentists and the other for 
 the assistants. The practice AGB code is required as matching identifier. 
 
+***Usage and Results***
+
+The request must contain the `token` and some information about the dentist to create.
+- Dentist identifier, Initials, Lastname and Specialty
+- Email, BIG number and KNMT number (if available)
+- Assistant identifier, Initials, Lastname and Email (if available)
+- Date when this request was issued ( *dd-mm-yyyy* )
+
+The response will contain a `Result` field with **OK** and the practice AGB Code in the
+`Messages` field or an error code.
+
 The request should then contain:
-- Authorization Token
-- Practice AGB code
 - About the dentists (a list of)
  - Dentist identifier
  - BIG number (optional)
@@ -331,11 +341,21 @@ The request should then contain:
  - Last name
  - Email (optional)
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Dentist.NotFound*
+- *Customer.NotFound*
+- *Unexpected.Error*
 
 + Request (application/json)
 
