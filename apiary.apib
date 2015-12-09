@@ -140,7 +140,7 @@ current version. No other possible values can be given. No errors should occur.
 
 This method should be used to create a new dental practice. Besides some basic data
 about the practice we should get the practice AGB code and also an email for contact 
-purposes. It should be also provided the number of patients currently registered.
+purposes. It should also be given the number of patients currently registered.
 
 ***Usage and Results***
 
@@ -149,8 +149,8 @@ The request must contain the `token` and some information about the practice:
 - Name and number of patients plus an administrative email
 - Geographic location - Address, Postal code, City
 
-The response will contain a `Result` field with **OK** and the practice AGB Code in the
-`Messages` field or an error code.
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code.
 
 ***Error Codes***
 
@@ -318,29 +318,14 @@ the assistants. The practice AGB code is required as matching identifier.
 
 ***Usage and Results***
 
-The request must contain the `token` and some information about the dentist to create.
+The request must contain the `token` and some information about the dentist or 
+assistant to create.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number (if available)
-- Assistant identifier, Initials, Lastname and Email (if available)
-- Date when this request was issued ( *dd-mm-yyyy* )
+- Email, BIG number and KNMT number (optional)
+- Assistant identifier, Initials, Lastname and Email (optional)
 
-The response will contain a `Result` field with **OK** and the practice AGB Code in the
-`Messages` field or an error code.
-
-The request should then contain:
-- About the dentists (a list of)
- - Dentist identifier
- - BIG number (optional)
- - KNMT number (optional)
- - Initials
- - Last name
- - Specialty
- - Email (optional)
-- About the assistants (a list of) (optional)
- - Assistant identifier
- - Initials
- - Last name
- - Email (optional)
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code. 
 
 ***Error Codes***
 
@@ -407,30 +392,32 @@ In case of error, the `Result` field will have one of:
 This method is used to get detailed information about the dentist or assistant given. 
 A dentist or an assistant should be identified their client-side identifier.
 
-The URL should then contain:
- - Authorization token
- - Dentist or Assistant identifier
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
-- the Practice AGB code 
-- a Dentist (Assistant should be empty)
- - Dentist identifier
- - BIG number (if available)
- - KNMT number (if available)
- - Initials
- - Last Name
- - Specialty
- - Email (if available)
-- an Assistant (Dentist should be empty)
- - Assistant identifier
- - Initials
- - Last Name
- - Email (if available)
-- the date of this information (dd-mm-yyyy)
+The request must contain the `token`, the practice `AGB code` and dentist/assistant 
+identifier.
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code and the information found about the 
+dentist or assistant is also returned.
+- Dentist identifier, Initials, Lastname and Specialty
+- Email, BIG number and KNMT number (if available)
+- Assistant identifier, Initials, Lastname and Email (if available)
+- Date when this request was issued ( *dd-mm-yyyy* )
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
