@@ -264,8 +264,8 @@ The response will contain a `Result` field with **OK** or an error code. If **OK
 the `Messages` field has the practice AGB code and the information found about the 
 dentists and/or assistants is also returned. 
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number (if available)
-- Assistant identifier, Initials, Lastname and Email (if available)
+- Email, BIG number and KNMT number ( *if available* )
+- Assistant identifier, Initials, Lastname and Email ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 ***Error Codes***
@@ -326,8 +326,8 @@ the assistants. The practice AGB code is required as matching identifier.
 The request must contain the `token` and some information about the dentist or 
 assistant to create.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number (optional)
-- Assistant identifier, Initials, Lastname and Email (optional)
+- Email, BIG number and KNMT number ( *optional* )
+- Assistant identifier, Initials, Lastname and Email ( *optional* )
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code. 
@@ -409,8 +409,8 @@ The response will contain a `Result` field with **OK** or an error code. If **OK
 the `Messages` field has the practice AGB code and the information found about the 
 dentist or assistant is also returned.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number (if available)
-- Assistant identifier, Initials, Lastname and Email (if available)
+- Email, BIG number and KNMT number ( *if available* )
+- Assistant identifier, Initials, Lastname and Email ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 ***Error Codes***
@@ -468,8 +468,8 @@ practice were they are registered.
 
 The request must contain the `token`, the practice `AGB code` and some information 
 about the patient to create.
-- Patient identifier, Gender (m/f) and Birthdate ( *dd-mm-yyyy* )
-- Height (in cm) and Weight (in kg)
+- Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- Height ( *cm* ) and Weight ( *kg* )
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code and a list with information about the
@@ -607,10 +607,10 @@ The request must contain the `token`, the practice `AGB code` and the patient
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code and the information found about the 
 patient is also returned.
-- Patient identifier, Gender (m/f) and Birthdate ( *dd-mm-yyyy* )
-- Height (in cm) and Weight (in kg)
+- Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- Height ( *cm* ) and Weight ( *kg* )
 - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
-- First Name, Last Name, Blood Group, City and Country (if available)
+- First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 ***Error Codes***
