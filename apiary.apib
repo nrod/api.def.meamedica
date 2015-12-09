@@ -202,8 +202,9 @@ the AGB code given as parameter.
 
 The request must contain the `token` and the practice `AGB code`.
 
-The response will contain a `Result` field with **OK** and the practice AGB Code in the
-`Messages` field plus the information found about the practice.
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code and the information found about the 
+practice is also returned.
 - Name, Contact and KVK number
 - Geographic location - Address, Postal code, City
 - Date of creation and date when this request was issued ( *dd-mm-yyyy* )
@@ -255,8 +256,8 @@ that work in the practice identified by the AGB code given as parameter.
 The request must contain the `token` and the practice `AGB code`.
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code the information found about the dentists
-and/or assistants is also returned. 
+the `Messages` field has the practice AGB code and the information found about the 
+dentists and/or assistants is also returned. 
 - Dentist identifier, Initials, Lastname and Specialty
 - Email, BIG number and KNMT number (if available)
 - Assistant identifier, Initials, Lastname and Email (if available)
