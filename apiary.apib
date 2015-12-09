@@ -100,8 +100,9 @@ in the field with the same name, `Token`.
 ***Error Codes***
 
 In case of error, the `Token` field will have one of:
-- *Unauthorized access.*
-- *An unexpected error has occurred.*
+- *Missing.Parameters*
+- *Unauthorized.Access*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -154,13 +155,13 @@ The response will contain a `Result` field with **OK** and the practice AGB Code
 ***Error Codes***
 
 In case of error, the `Result` field will have one of:
-- *Token is missing.*
-- *Unauthorized access.*
-- *Invalid token provided.*
-- *Missing parameters.*
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
 - *Practice.Exists*
 - *Practice.NotAdded*
-- *An unexpected error has occurred.*
+- *Unexpected.Error*
 
 + Request (application/json)
 
@@ -210,16 +211,16 @@ The response will contain a `Result` field with **OK** and the practice AGB Code
 ***Error Codes***
 
 In case of error, the `Result` field will have one of:
-- *Token is missing.*
-- *Unauthorized access.*
-- *Invalid token provided.*
-- *Missing parameters.*
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
 - *Practice.NotFound*
 - *Subscription.NotFound*
 - *Subscription.Expired*
 - *Subscription.NoPaymentInfo*
 - *Subscription.NotPaid*
-- *An unexpected error has occurred.*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -263,16 +264,16 @@ The response will contain a `Result` field with **OK** and the practice AGB Code
 ***Error Codes***
 
 In case of error, the `Result` field will have one of:
-- *Token is missing.*
-- *Unauthorized access.*
-- *Invalid token provided.*
-- *Missing parameters.*
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
 - *Practice.NotFound*
 - *Subscription.NotFound*
 - *Subscription.Expired*
 - *Subscription.NoPaymentInfo*
 - *Subscription.NotPaid*
-- *An unexpected error has occurred.*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
