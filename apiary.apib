@@ -660,6 +660,21 @@ The request must contain the `token`, the practice `AGB code` and the patient
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code.
 
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Patient.NotFound*
+- *Unexpected.Error*
+
 + Request (application/json)
 
         {
