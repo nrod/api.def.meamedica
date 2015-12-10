@@ -469,7 +469,11 @@ practice were they are registered.
 The request must contain the `token`, the practice `AGB code` and some information 
 about the patient to create.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- Height ( *cm* ) and Weight ( *kg* )
+- BSN number, Height ( *cm* ) and Weight ( *kg* )
+
+***NOTE*** the `BSN number` is stored encrypted in the database and that encryption
+is done directly upon receiving the BSN. This number does not exist in a readable 
+format.
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code and a list with information about the
