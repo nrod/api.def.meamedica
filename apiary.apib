@@ -713,16 +713,29 @@ This method is intended to activate a subscription for an existing practice. It
 requires information about the practice to activate, an administrative email address
 and the authorization token.
 
-The request should then contain:
-- Authorization Token
-- Practice AGB code
-- Practice administrative email
+***Usage and Results***
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
+The request must contain the `token`, the practice `AGB code` and the practice
+administrative `email`.
+
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code.
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Subscription.NotAdded*
+- *Pricing.NotFound*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -743,29 +756,35 @@ This method is intended to modify an existing subscription. It requires the
 practice AGB as an identifier and afterwards subscription data, payment and 
 pricing information.
 
-The request should then contain:
-- Authorization Token
-- Practice AGB code
-- Description (optional)
-- License Type: **Y**early, **M**onthly, **A**uto renew monthly
+***Usage and Results***
+
+The request must contain the `token`, the practice `AGB code` and some information 
+about the subscription to modify.
+- Description ( *optional* )
+- License Type: **Y**early, **M**onthly, **A**uto renew
 - Pricing Tier: **B**asic, **S**tandard, **P**remium
 - Payment Type: **i**Deal, **M**asterCard, **V**isa, **B**ank transfer, **A**utomatic Debit
+- Card Number, Year, Month, Code and Name ( *if Payment Type is V/M* )
+- Account Number ( *if Payment Type is A* )
 
-If Payment Type is a credit card (Mastercard, Visa):
-- Card Number
-- Card Year
-- Card Month
-- Card Code
-- Card Name
- 
-If Payment Type is an automatic debit:
-- Account Number
+The response will contain a `Result` field with **OK** or an error code. If **OK** 
+the `Messages` field has the practice AGB code. 
 
-The response will contain:
-- a Result value 
- - `OK` in case of success or a `message` otherwise 
-- a Messages list 
- - the practice `AGB code` in case of success or a list of the `errors` that occurred
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Subscription.NotAdded*
+- *Pricing.NotFound*
+- *Unexpected.Error*
 
 + Request (application/json)
 
@@ -819,6 +838,20 @@ subscription is also returned.
 - Pricing Tier (`Basic`, `Standard`, `Premium`) and Price per Patient ( *eur* )
 - Payment Type (`iDeal`, `MasterCard`, `Visa`, `Bank transfer`, `Automatic Debit`) and Discount
 - Date when this request was issued ( *dd-mm-yyyy* )
+
+***Error Codes***
+
+In case of error, the `Result` field will have one of:
+- *Missing.Token*
+- *Unauthorized.Access*
+- *Invalid.Token*
+- *Missing.Parameters*
+- *Practice.NotFound*
+- *Subscription.NotFound*
+- *Subscription.Expired*
+- *Subscription.NoPaymentInfo*
+- *Subscription.NotPaid*
+- *Unexpected.Error*
 
 + Response 200 (application/json)
 
