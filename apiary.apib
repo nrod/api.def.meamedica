@@ -78,7 +78,8 @@ New method to Close patient activity.
 (β-version) Token is now generated using a new encoding method. Some errors identified 
 during testing phase were solved and this documentation was updated, i.e. added new 
 sections (Description, Usage and Results, Error Codes) in all methods. Description of 
-possible error codes per API method is also now included.
+possible error codes per API method is also now included. BSN number is now requested
+for a Patient.
 
 # Group Common API
 
@@ -506,6 +507,7 @@ In case of error, the `Result` field will have one of:
             "Patients": [
                 {
                   "PatientNr": "string",
+                  "BsnNumber": "string",
                   "Gender": "string",
                   "Birthdate": "string",
                   "Height": "string",
