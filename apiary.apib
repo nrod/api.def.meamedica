@@ -84,8 +84,9 @@ anesthesia.
 
 ### v1.8.110116
 (β-version) Improvements in Practice and Patient activation. BSN number is now received
-hashed in the request and stored directly in database. Some other minor improvements
-and optimizations towards a stable platform.
+hashed in the request and stored directly in database. When sent back in the response
+it is also sent hashed. Some other minor improvements and optimizations towards a 
+stable platform.
 
 # Group Common API
 
@@ -898,7 +899,7 @@ it can be found in the following URLs:
 - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
 - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
 
-As described before the BSN Number is received hashed and more information about 
+As described before the **BSN Number** is received hashed and more information about 
 this process can be found in the following URLs:
 - **Secure Hash Algorithm** : https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
 - **SHA-256** : https://en.wikipedia.org/wiki/SHA-2
