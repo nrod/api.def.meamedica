@@ -486,9 +486,9 @@ about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code and a list with information about the
 patient is also returned. 
-- Patient Number (in the client system)
-- BSN Number ( *hashed* )
-- Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
+- Patient number (in the client system)
+- BSN number ( *hashed* )
+- Patient status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - Activation URL (only applicable to `Patient.New`, empty otherwise)
 
 ***Error Codes***
@@ -565,7 +565,7 @@ The response will contain a `Result` field with **OK** or an error code. If **OK
 the `Messages` field has the practice AGB code and the information found about the 
 patient is also returned.
 - Patient identifier
-- BSN Number ( *hashed* )
+- BSN number ( *hashed* )
 - Latest ASA score, Number of medicines in use
 - Number of MTI messages, Allergic to anesthesia
 - Date when this request was issued ( *dd-mm-yyyy* )
@@ -624,7 +624,7 @@ The response will contain a `Result` field with **OK** or an error code. If **OK
 the `Messages` field has the practice AGB code and the information found about the 
 patient is also returned.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- BSN Number ( *hashed* )
+- BSN number ( *hashed* )
 - Height ( *cm* ) and Weight ( *kg* )
 - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
@@ -782,8 +782,8 @@ about the subscription to modify.
 - License Type: **Y**early, **M**onthly, **A**uto renew
 - Pricing Tier: **B**asic, **S**tandard, **P**remium
 - Payment Type: **i**Deal, **M**asterCard, **V**isa, **B**ank transfer, **A**utomatic Debit
-- Card Number, Year, Month, Code and Name ( *if Payment Type is V/M* )
-- Account Number ( *if Payment Type is A* )
+- Card number, Year, Month, Code and Name ( *if Payment Type is V/M* )
+- Account number ( *if Payment Type is A* )
 
 The response will contain a `Result` field with **OK** or an error code. If **OK** 
 the `Messages` field has the practice AGB code. 
@@ -899,7 +899,7 @@ it can be found in the following URLs:
 - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
 - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
 
-As described before the **BSN Number** is received hashed and more information about 
+As described before the **BSN number** is received hashed and more information about 
 this process can be found in the following URLs:
 - **Secure Hash Algorithm** : https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
 - **SHA-256** : https://en.wikipedia.org/wiki/SHA-2
