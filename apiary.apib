@@ -111,17 +111,19 @@ encrypted `token`, such as e.g. *xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazv
 in the field with the same name, `Token`. 
 
 ***Error Codes***
-
-In case of error, the `Token` field will have one of:
-- *Missing.Parameters*
-- *Unauthorized.Access*
-- *Unexpected.Error*
+- *ClientKeyMissing* (HTTP 400 Bad Request)
+- *ClientKeyNoAccess* (HTTP 401 Unauthorized)
+- *Unexpected.Error* (in `Token` field)
 
 + Response 200 (application/json)
 
         {
             "Token": "string"
         }
+        
++ Response 400 (application/json)
+
++ Response 401 (application/json)
 
 ## Current Version > Get [/version]
 
