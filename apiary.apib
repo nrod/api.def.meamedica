@@ -124,6 +124,10 @@ in the field with the same name, `Token`.
 + Response 400 (application/json)
 
 + Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate: ClientKey.NoAccess
 
 ## Current Version > Get [/version]
 
@@ -897,7 +901,7 @@ In case of error, the `Result` field will have one of:
 As a background note this API documentation is hosted at and was done using 
 [Apiary](https://apiary.io) and (some of) the resources used to describe 
 it can be found in the following URLs:
-- **API Blueprint Tutorial** : https://apiary.io/blueprint
+- **API Blueprint Tutorial** : https://docs.apiary.io/api_101/api_blueprint_tutorial/
 - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
 - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
 
