@@ -111,9 +111,9 @@ encrypted `token`, such as e.g. *xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazv
 in the field with the same name, `Token`. 
 
 ***Error Codes***
-- *ClientKey.Missing* (HTTP 400 Bad Request)
-- *ClientKey.NoAccess* (HTTP 401 Unauthorized)
-- *Unexpected.Error* (in `Token` field)
+- HTTP 400 ( *Bad Request* ) with *ClientKey.Missing* in `Response Body`
+- HTTP 401 ( *Unauthorized* ) with *ClientKey.NoAccess* in `Response Header`
+- *Unexpected.Error* in `Token`
 
 + Response 200 (application/json)
 
@@ -131,7 +131,7 @@ in the field with the same name, `Token`.
     
     + Headers
 
-            WWW-Authenticate: ClientKey.NoAccess
+            WWW-Authenticate:ClientKey.NoAccess
 
 ## Current Version > Get [/version]
 
