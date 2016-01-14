@@ -13,7 +13,7 @@ can be used in several medical areas.
 - Dental Practices
 
 #### Current API Status
-- Operating normally.
+- Operating normally but may be subject to changes without prior notice.
 
 ## Ownership
 
@@ -83,10 +83,13 @@ for a Patient. Patient Overview now includes also information about allergy to l
 anesthesia.
 
 ### v1.8.110116
-(β-version) Improvements in Practice and Patient activation. BSN number is now received
+Improvements in Practice and Patient activation. BSN number is now received
 hashed in the request and stored directly in database. When sent back in the response
-it is also sent hashed. Some other minor improvements and optimizations towards a 
-stable platform.
+it is also sent hashed. Some other minor improvements and optimizations.
+
+### v1.9.140116
+(β-version) Full revision of return codes and inclusion of HTTP codes in some cases. 
+BSN number is now optional in Patient > Create. More improvements and optimizations.
 
 # Group Common API
 
@@ -104,16 +107,21 @@ receive their client key when they have an agreement to use this API service.
 This token must then be used in all other requests to API methods here described
 (search for the `token` keyword).
 
-***Usage and Results***
+***Usage***
 
-The request must contain the `clientKey`. The response will be an authorized and 
-encrypted `token`, such as e.g. *xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
-in the field with the same name, `Token`. 
+The request must contain the `clientKey`. The response will be in the field `Token`. 
+It is an authorized and encrypted string that includes a timestamp to make it valid 
+during a specific time period and will be similar to:
+*xe24csp34lqem662sbvyzbtz2z6pfclflpnlbm5aowrlazvhu5benfhsa64srg3e3teaka45llnue===*
 
-***Error Codes***
-- HTTP 400 ( *Bad Request* ) with *ClientKey.Missing* in `Response Body`
-- HTTP 401 ( *Unauthorized* ) with *ClientKey.NoAccess* in `Response Header`
-- *Unexpected.Error* in `Token`
+***Response***
+
+| HTTP Code  | API Code           | Found in          | Description                   |
+| :--------: | :----------------- | :---------------- | :---------------------------- |
+| 400        | ClientKey.Missing  | `Response Body`   | No ClientKey was given.       |
+| 401        | ClientKey.NoAccess | `Response Header` | ClientKey is not valid.       |
+| 200        | `token`            | `Token` field     | A valid token was issued.     |
+| 200        | Unexpected.Error   | `Token` field     | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 + Response 200 (application/json)
 
@@ -142,10 +150,10 @@ in the field with the same name, `Token`.
 This method is used to get the current version of this API mainly for informative
 purposes. Nothing is expected in the request or as an URL parameter.
 
-***Usage and Results***
+***Usage and Response***
 
 No input is necessary to call this method so the response will just show the 
-current version. No other possible values can be given. No errors should occur.
+current version. No other possible values can be given. No errors can occur.
 
 + Response 200 (application/json)
 
@@ -165,26 +173,25 @@ This method should be used to create a new dental practice. Besides some basic d
 about the practice we should get the practice AGB code and also an email for contact 
 purposes. It should also be given the number of patients currently registered.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token` and some information about the practice:
 - Unique identifier - AGB code
-- Name and number of patients plus an administrative email
+- Identification - Name, Number of patients, Administrative email
 - Geographic location - Address, Postal code, City
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code.
+***Response***
 
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.Exists*
-- *Practice.NotAdded*
-- *Unexpected.Error*
+| HTTP Code  | API Code           | Found in          | Description                      |
+| :--------: | :----------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing      | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired      | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.Exists    | `Result` field    | Practice AGB already exists.     |
+| 200        | Practice.NotAdded  | `Result` field    | Practice was not created.        |
+| 200        | OK                 | `Result` field    | Practice was created.            |
+| 200        | Unexpected.Error   | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 + Request (application/json)
 
@@ -207,6 +214,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Practice > Get Information [/practice/get?practiceAgb={practiceAgb}&token={token}]
 
@@ -221,30 +242,31 @@ In case of error, the `Result` field will have one of:
 This method is used to get detailed information about the practice identified by 
 the AGB code given as parameter.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token` and the practice `AGB code`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-practice is also returned.
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | OK                    | `Result` field    | Practice was found.              |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the practice is returned in the proper fields.
 - Name, Contact and KVK number
 - Geographic location - Address, Postal code, City
 - Date of creation and date when this request was issued ( *dd-mm-yyyy* )
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -260,6 +282,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
 
@@ -274,31 +310,33 @@ In case of error, the `Result` field will have one of:
 This method is used to get detailed information about the dentists and assistants
 that work in the practice identified by the AGB code given as parameter.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token` and the practice `AGB code`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-dentists and/or assistants is also returned. 
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | OK                    | `Result` field    | Dentists or assistants were found. |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the practice dentists and/or assistants is returned in the proper 
+fields.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number ( *if available* )
+- Dentist email, BIG number and KNMT number ( *if available* )
 - Assistant identifier, Initials, Lastname and Email ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -328,6 +366,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ],
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Dentist > Create [/dentist/create]
 
@@ -339,35 +391,37 @@ This method is meant to add a list of dentists and/or assistants to an existing
 practice. There are two lists with data, one for the dentists and the other for 
 the assistants. The practice AGB code is required as matching identifier. 
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token` and some information about the dentist or 
-assistant to create.
+assistant to create. In one request, one dentist or one assistant or one of each can 
+be created.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number ( *optional* )
-- Assistant identifier, Initials, Lastname and Email ( *optional* )
+- Dentist email, BIG number and KNMT number ( *optional* )
+- Assistant identifier, Initials, Lastname and Email
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code. 
+***Response***
 
-***Error Codes***
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotAdded     | `Result` field    | Dentist or assistant was not created. |
+| 200        | Customer.Duplicate    | `Result` field    | Dentist or assistant already exists.  |
+| 200        | Dentist.NotAdded      | `Result` field    | Dentist or assistant was not created. |
+| 200        | Dentist.Exists        | `Result` field    | Dentist or assistant already exists.  |
+| 200        | Dentist.NoSpecialty   | `Result` field    | Specialty was not found.         |
+| 200        | OK                    | `Result` field    | Dentist was created.             |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Customer.NotAdded*
-- *Customer.Duplicate*
-- *Dentist.NotAdded*
-- *Dentist.Exists*
-- *Dentist.NoSpecialty*
-- *Unexpected.Error*
+In case of `OK`, the `Messages` field has the **AGB Code**.
 
 + Request (application/json)
 
@@ -403,6 +457,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Dentist > Get Information [/dentist/get?practiceAgb={practiceAgb}&dentistId={dentistId}&token={token}]
 
@@ -416,36 +484,38 @@ In case of error, the `Result` field will have one of:
 ***Description***
 
 This method is used to get detailed information about the dentist or assistant given. 
-A dentist or an assistant should be identified their client-side identifier.
+A dentist or an assistant should be identified by their client-side identifier.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and the dentist/assistant 
 `identifier`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-dentist or assistant is also returned.
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Dentist or assistant not found.  |
+| 200        | Dentist.NotFound      | `Result` field    | Dentist or assistant not found.  |
+| 200        | OK                    | `Result` field    | Dentist or assistant was found.  |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **Dentist identifier** and the following 
+information about the practice dentist or assistant is returned in the proper 
+fields.
 - Dentist identifier, Initials, Lastname and Specialty
-- Email, BIG number and KNMT number ( *if available* )
-- Assistant identifier, Initials, Lastname and Email ( *if available* )
+- Dentist email, BIG number and KNMT number ( *if available* )
+- Assistant identifier, Initials, Lastname and Email
 - Date when this request was issued ( *dd-mm-yyyy* )
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Dentist.NotFound*
-- *Customer.NotFound*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -471,6 +541,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Patient > Create [/patient/create]
 
@@ -482,41 +566,42 @@ This method can be used to create one or more patients for a given practice.
 It expects to receive some generic data about the patients and about the 
 practice were they are registered.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and some information 
 about the patient to create.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- BSN number ( *hashed* ), Height ( *cm* ) and Weight ( *kg* )
+- Height ( *cm* ) and Weight ( *kg* )
+- BSN number ( *hashed and optional* )
 
 ***NOTE*** the `BSN number` is received in a hashed format and stored that same way
 in the database. This number does not exist in a readable format. For more information
 about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/Secure_Hash_Algorithm) and in more detail [SHA-256](https://en.wikipedia.org/wiki/SHA-2).
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and a list with information about the
-patient is also returned. 
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotAdded     | `Result` field    | Patient was not created.         |
+| 200        | Patient.NotAdded      | `Result` field    | Patient was not created.         |
+| 200        | OK                    | `Result` field    | Patient was created.              |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the patient is returned in the proper fields.
 - Patient number (in the client system)
-- BSN number ( *hashed* )
+- BSN number ( *hashed if available* )
 - Patient status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - Activation URL (only applicable to `Patient.New`, empty otherwise)
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Customer.NotAdded*
-- *Patient.NotAdded*
-- *Patient.Duplicate*
-- *Unexpected.Error*
 
 + Request (application/json)
 
@@ -551,6 +636,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Patient > Get Overview [/patient/overview/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
@@ -566,34 +665,35 @@ In case of error, the `Result` field will have one of:
 This method is used to get an overview of some patient information. The information
 will be given only if the patient belongs to the specified practice.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and the patient 
 `identifier`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-patient is also returned.
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the patient is returned in the proper fields.
 - Patient identifier
-- BSN number ( *hashed* )
+- BSN number ( *hashed if available* )
 - Latest ASA score, Number of medicines in use
 - Number of MTI messages, Allergic to anesthesia
 - Date when this request was issued ( *dd-mm-yyyy* )
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Patient.NotFound*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -611,6 +711,20 @@ In case of error, the `Result` field will have one of:
             ]
         }
         
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+        
 ## Patient > Get Information [/patient/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
@@ -625,35 +739,37 @@ In case of error, the `Result` field will have one of:
 This method is used to get details about the given patient. The information
 will be given only if the patient belongs to the specified practice.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and the patient 
 `identifier`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-patient is also returned.
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the patient is returned in the proper fields.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- BSN number ( *hashed* )
+- BSN number ( *hashed if available* )
 - Height ( *cm* ) and Weight ( *kg* )
 - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Patient.NotFound*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -676,6 +792,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Patient > Close [/patient/close]
 
@@ -686,28 +816,29 @@ In case of error, the `Result` field will have one of:
 This method is used to close the activity of a patient inline with the client system.
 The operation will be executed only if the patient belongs to the specified practice.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and the patient 
 `identifier`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code.
+***Response***
 
-***Error Codes***
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was closed.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Patient.NotFound*
-- *Unexpected.Error*
+In case of `OK`, the `Messages` field has the **AGB code**.
 
 + Request (application/json)
 
@@ -725,6 +856,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 ## Subscription > Activate [/subscription/activate?practiceagb={practiceagb}&email={email}&token={token}]
 
@@ -741,29 +886,30 @@ This method is intended to activate a subscription for an existing practice. It
 requires information about the practice to activate, an administrative email address
 and the authorization token.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and the practice
 administrative `email`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code.
+***Response***
 
-***Error Codes***
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Subscription.NotAdded | `Result` field    | Subscription was not created.    |
+| 200        | Pricing.NotFound      | `Result` field    | Pricing was not found.           |
+| 200        | OK                    | `Result` field    | Subscription was activated.      |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Subscription.NotAdded*
-- *Pricing.NotFound*
-- *Unexpected.Error*
+In case of `OK`, the `Messages` field has the **AGB code**.
 
 + Response 200 (application/json)
 
@@ -773,6 +919,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
         
 ## Subscription > Modify [/subscription/modify]
 
@@ -784,36 +944,45 @@ This method is intended to modify an existing subscription. It requires the
 practice AGB as an identifier and afterwards subscription data, payment and 
 pricing information.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token`, the practice `AGB code` and some information 
 about the subscription to modify.
 - Description ( *optional* )
-- License Type: **Y**early, **M**onthly, **A**uto renew
-- Pricing Tier: **B**asic, **S**tandard, **P**remium
-- Payment Type: **i**Deal, **M**asterCard, **V**isa, **B**ank transfer, **A**utomatic Debit
-- Card number, Year, Month, Code and Name ( *if Payment Type is V/M* )
-- Account number ( *if Payment Type is A* )
+- License Type: 
+  - **Y**early ( *paid once per year and can expire* )
+  - **M**onthly ( *paid once per month and can expire* )
+  - **A**uto renew ( *paid once per month and does not expire* )
+- Pricing Tier: 
+  - **B**asic
+  - **S**tandard
+  - **P**remium
+- Payment Type: 
+  - **i**Deal
+  - **M**asterCard, **V**isa (requires *Card number, Year, Month, Code and Name*)
+  - **B**ank transfer
+  - **A**utomatic Debit (requires *Account number*)
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code. 
+***Response***
 
-***Error Codes***
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Subscription.NotAdded | `Result` field    | Subscription was not created.    |
+| 200        | Payment.NotAdded      | `Result` field    | Payment was not created.         |
+| 200        | Pricing.NotFound      | `Result` field    | Pricing was not found.           |
+| 200        | OK                    | `Result` field    | Subscription was updated.        |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Subscription.NotAdded*
-- *Payment.NotAdded*
-- *Pricing.NotFound*
-- *Unexpected.Error*
+In case of `OK`, the `Messages` field has the **AGB code**.
 
 + Request (application/json)
 
@@ -841,6 +1010,20 @@ In case of error, the `Result` field will have one of:
             ]
         }
         
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+        
 ## Subscription > Get [/subscription/get?practiceagb={practiceagb}&token={token}]
 
 + Parameters
@@ -855,32 +1038,33 @@ This method is used to get details about the subscription assigned to the given
 practice. The resulting information does not include any sensitive and/or financial 
 data.
 
-***Usage and Results***
+***Usage***
 
 The request must contain the `token` and the practice `AGB code`.
 
-The response will contain a `Result` field with **OK** or an error code. If **OK** 
-the `Messages` field has the practice AGB code and the information found about the 
-subscription is also returned.
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | OK                    | `Result` field    | Subscription was found.          |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the subscription is returned in the proper fields.
 - Description and Date created ( *dd-mm-yyyy* )
 - License Type (`Yearly`, `Monthly`, `AutoRenew`) and License Date ( *dd-mm-yyyy* )
 - Pricing Tier (`Basic`, `Standard`, `Premium`) and Price per Patient ( *eur* )
 - Payment Type (`iDeal`, `MasterCard`, `Visa`, `Bank transfer`, `Automatic Debit`) and Discount
 - Date when this request was issued ( *dd-mm-yyyy* )
-
-***Error Codes***
-
-In case of error, the `Result` field will have one of:
-- *Missing.Token*
-- *Unauthorized.Access*
-- *Invalid.Token*
-- *Missing.Parameters*
-- *Practice.NotFound*
-- *Subscription.NotFound*
-- *Subscription.Expired*
-- *Subscription.NoPaymentInfo*
-- *Subscription.NotPaid*
-- *Unexpected.Error*
 
 + Response 200 (application/json)
 
@@ -899,6 +1083,20 @@ In case of error, the `Result` field will have one of:
                 "string"
             ]
         }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
 # Group Technical Reference
 
