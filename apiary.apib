@@ -43,38 +43,38 @@ other countries.
 
 ## Version History
 
-### v1.0.280915
+### v1.0.150928
 Added Dental Practice API group which includes 3 methods 
 (create practice/dentists, create patient, load patient overview).
 
-### v1.1.071015
+### v1.1.151007
 Added Common API group which includes 2 methods (access, version),
 implemented token-based authentication in all methods and updated Usage URLs.
 
-### v1.2.131015
+### v1.1.151013
 Added new Dental Practice methods (subscription, dentist). This last one replaces
 partially the create practice method that is only to create the practice itself.
 
-### v1.3.191015
+### v1.1.151019
 Added new method to get Dentists and/or Assistants in a Practice. 
 Internal optimizations and new documentation organization which includes new
 URLs for API methods.
 
-### v1.4.121115
+### v1.2.151112
 Added new methods in Patient (Get) and Dentist (Get). Changed Subscription 
 (Create to Activate), added Modify and Get. Revised and improved token format: 
 now more suitable for use in an URL. Several internal optimizations and validations.
 
-### v1.5.181115
+### v1.2.151118
 Several code optimizations, improvements and validations. Access token is now generated
 with a timestamp which makes it valid only for a certain period of time. 
 
-### v1.6.261115
-(α-version) Reduced timestamp validity, Dentists and Assistants can only be identified
+### v1.2.151126
+Reduced timestamp validity, Dentists and Assistants can only be identified
 by their client-side identifier. Subscription is now being check in several API methods.
 New method to Close patient activity.
 
-### v1.7.091215
+### v1.3.151209
 Token is now generated using a new encoding method. Some errors identified 
 during testing phase were solved and this documentation was updated, i.e. added new 
 sections (Description, Usage and Results, Error Codes) in all methods. Description of 
@@ -82,14 +82,19 @@ possible error codes per API method is also now included. BSN number is now requ
 for a Patient. Patient Overview now includes also information about allergy to local 
 anesthesia.
 
-### v1.8.110116
+### v1.4.160111
 Improvements in Practice and Patient activation. BSN number is now received
 hashed in the request and stored directly in database. When sent back in the response
 it is also sent hashed. Some other minor improvements and optimizations.
 
-### v1.9.140116
-(β-version) Full revision of return codes and inclusion of HTTP codes in some cases. 
+### v1.4.160114
+Full revision of return codes and inclusion of HTTP codes in some cases. 
 BSN number is now optional in Patient > Create. More improvements and optimizations.
+
+### v1.4.160120
+New API methods: Patient > Get with BSN ( *hashed* ). Dentist and Assistant methods 
+were redesigned and are now more flexible. New API method to create an Assistant and a 
+Dentist where the Assistant is assigned to the Dentist.
 
 # Group Common API
 
@@ -161,7 +166,7 @@ current version. No other possible values can be given. No errors can occur.
             "Version": "string"
         }
 
-# Group Dental API
+# Group Practice API
 
 ## Practice > Create [/practice/create]
 
@@ -170,8 +175,8 @@ current version. No other possible values can be given. No errors can occur.
 ***Description***
 
 This method should be used to create a new dental practice. Besides some basic data
-about the practice we should get the practice AGB code and also an email for contact 
-purposes. It should also be given the number of patients currently registered.
+about the practice we should get the practice AGB code and also an email for administrative
+contact purposes. It should also be given the number of patients currently registered.
 
 ***Usage***
 
@@ -229,7 +234,7 @@ The request must contain the `token` and some information about the practice:
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Practice > Get Information [/practice/get?practiceAgb={practiceAgb}&token={token}]
+## Practice > Get [/practice/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -381,24 +386,26 @@ fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
+# Group Dentist API
+
 ## Dentist > Create [/dentist/create]
 
 ### API Definition [POST]
 
 ***Description***
 
-This method is meant to add a list of dentists and/or assistants to an existing
-practice. There are two lists with data, one for the dentists and the other for 
-the assistants. The practice AGB code is required as matching identifier. 
+This method is meant to add one or more dentists to an existing practice. The practice
+AGB code is required as matching identifier. 
 
 ***Usage***
 
-The request must contain the `token` and some information about the dentist or 
-assistant to create. In one request, one dentist or one assistant or one of each can 
-be created.
-- Dentist identifier, Initials, Lastname and Specialty
-- Dentist email, BIG number and KNMT number ( *optional* )
-- Assistant identifier, Initials, Lastname and Email
+The request must contain the `token` and some information about the dentist to create. 
+In one request, one or more dentists can be created.
+- Dentist identifier, Initials, Lastname, Specialty and if it is a Student
+- Dentist email, BIG number and KNMT number ( *all optional* )
+
+Accepted specialties are: *Tandarts, Mondhygiënist, Tandprothetica, Tandartsassistent, 
+MKA-chirurg, Paradontoloog, Endodontoloog, Pedodontoloog, Implantoloog en Gnatholoog.*
 
 ***Response***
 
@@ -413,10 +420,10 @@ be created.
 | 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
-| 200        | Customer.NotAdded     | `Result` field    | Dentist or assistant was not created. |
-| 200        | Customer.Duplicate    | `Result` field    | Dentist or assistant already exists.  |
-| 200        | Dentist.NotAdded      | `Result` field    | Dentist or assistant was not created. |
-| 200        | Dentist.Exists        | `Result` field    | Dentist or assistant already exists.  |
+| 200        | Customer.NotAdded     | `Result` field    | Dentist was not created.         |
+| 200        | Customer.Duplicate    | `Result` field    | Dentist already exists.          |
+| 200        | Dentist.NotAdded      | `Result` field    | Dentist was not created.         |
+| 200        | Dentist.Exists        | `Result` field    | Dentist already exists.          |
 | 200        | Dentist.NoSpecialty   | `Result` field    | Specialty was not found.         |
 | 200        | OK                    | `Result` field    | Dentist was created.             |
 | 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -435,9 +442,319 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                   "Initials": "string",
                   "LastName": "string",
                   "Specialty": "string",
-                  "Email": "string"
+                  "Email": "string",
+                  "IsStudent": "string"
                 }
             ],
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Dentist + Assistant > Create [/dentist/assistant/create]
+
+### API Definition [POST]
+
+***Description***
+
+This method is meant to add one dentist and one assistant to an existing practice. 
+They will be assigned to each other and that allows the assistant to perform several
+operations in behalf of the dentist. Take this into account when using this method.
+The practice AGB code is required as matching identifier. 
+
+***Usage***
+
+The request must contain the `token` and some information about the dentist and the
+assistant to create. 
+- Dentist identifier, Initials, Lastname, Specialty and if it is a Student
+- Dentist email, BIG number and KNMT number ( *all optional* )
+- Assistant identifier, Initials, Lastname and Email
+
+Accepted specialties are: *Tandarts, Mondhygiënist, Tandprothetica, Tandartsassistent, 
+MKA-chirurg, Paradontoloog, Endodontoloog, Pedodontoloog, Implantoloog en Gnatholoog.*
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Assistant.NotAdded    | `Result` field    | Assistant was not created.       |
+| 200        | Customer.NotAdded     | `Result` field    | Dentist was not created.         |
+| 200        | Customer.Duplicate    | `Result` field    | Dentist already exists.          |
+| 200        | Dentist.NotAdded      | `Result` field    | Dentist was not created.         |
+| 200        | Dentist.Exists        | `Result` field    | Dentist already exists.          |
+| 200        | Dentist.NoSpecialty   | `Result` field    | Specialty was not found.         |
+| 200        | OK                    | `Result` field    | Dentist and assistant were created. |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code**.
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "DentistId": "string",
+            "BigNumber": "string",
+            "KnmtNumber": "string",
+            "Initials": "string",
+            "LastName": "string",
+            "Specialty": "string",
+            "Email": "string",
+            "IsStudent": "string",
+            "AssistantId": "string",
+            "AssistantInitials": "string",
+            "AssistantLastName": "string",
+            "AssistantEmail": "string",
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Dentist > Get [/dentist/get?practiceAgb={practiceAgb}&dentistId={dentistId}&token={token}]
+
++ Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + dentistId: 12345678 (required, number) - client-side identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get detailed information about the dentist given. A dentist 
+should be identified by its client-side identifier.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and the dentist `identifier`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Dentist not found.               |
+| 200        | Dentist.NotFound      | `Result` field    | Dentist not found.               |
+| 200        | OK                    | `Result` field    | Dentist was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **Dentist identifier** and the following 
+information about the dentist is returned in the proper fields.
+- Dentist identifier, Initials, Lastname, Specialty and if it is Student
+- Dentist email, BIG number and KNMT number ( *if available* )
+- Date when this request was issued ( *dd-mm-yyyy* )
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "Dentist": {
+                "DentistId": "string",
+                "BigNumber": "string",
+                "KnmtNumber": "string",
+                "Initials": "string",
+                "LastName": "string",
+                "Specialty": "string",
+                "Email": "string",
+                "IsStudent": "string"
+            },
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Dentist > Get with BIG [/dentist/big/get?practiceAgb={practiceAgb}&bigNumber={bigNumber}&token={token}]
+
++ Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + bigNumber: 12345678901 (required, number) - unique care professional identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get detailed information about the dentist given. A dentist 
+should be identified by its unique care professional identifier: the BIG number.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and the dentist `BIG` number.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Dentist not found.               |
+| 200        | Dentist.NotFound      | `Result` field    | Dentist not found.               |
+| 200        | OK                    | `Result` field    | Dentist was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **Dentist BIG** number and the following 
+information about the dentist is returned in the proper fields.
+- Dentist identifier, Initials, Lastname, Specialty and if it is Student
+- Dentist email, BIG number and KNMT number ( *if available* )
+- Date when this request was issued ( *dd-mm-yyyy* )
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "Dentist": {
+                "DentistId": "string",
+                "BigNumber": "string",
+                "KnmtNumber": "string",
+                "Initials": "string",
+                "LastName": "string",
+                "Specialty": "string",
+                "Email": "string",
+                "IsStudent": "string"
+            },
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+# Group Assistant API
+
+## Assistant > Create [/assistant/create]
+
+### API Definition [POST]
+
+***Description***
+
+This method is meant to add one or more assistants to an existing practice. The 
+practice AGB code is required as matching identifier. 
+
+***Usage***
+
+The request must contain the `token` and some information about the assistant to 
+create. In one request, one or more assistants can be created.
+- Assistant identifier, Initials, Lastname and Email
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotAdded     | `Result` field    | Assistant was not created.       |
+| 200        | Customer.Duplicate    | `Result` field    | Assistant already exists.        |
+| 200        | Assistant.NotAdded    | `Result` field    | Assistant was not created.       |
+| 200        | Assistant.Exists      | `Result` field    | Assistant already exists.        |
+| 200        | OK                    | `Result` field    | Assistant was created.           |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code**.
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
             "Assistants": [
                 {
                   "AssistantId": "string",
@@ -472,23 +789,23 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Dentist > Get Information [/dentist/get?practiceAgb={practiceAgb}&dentistId={dentistId}&token={token}]
+## Assistant > Get [/assistant/get?practiceAgb={practiceAgb}&assistantId={assistantId}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + dentistId: 12345678 (required, number) - client-side identifier
+    + assistantId: 12345678 (required, number) - client-side identifier
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
 
 ***Description***
 
-This method is used to get detailed information about the dentist or assistant given. 
-A dentist or an assistant should be identified by their client-side identifier.
+This method is used to get detailed information about the assistant given. An assistant
+should be identified by their client-side identifier.
 
 ***Usage***
 
-The request must contain the `token`, the practice `AGB code` and the dentist/assistant 
+The request must contain the `token`, the practice `AGB code` and the assistant 
 `identifier`.
 
 ***Response***
@@ -504,16 +821,13 @@ The request must contain the `token`, the practice `AGB code` and the dentist/as
 | 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
-| 200        | Customer.NotFound     | `Result` field    | Dentist or assistant not found.  |
-| 200        | Dentist.NotFound      | `Result` field    | Dentist or assistant not found.  |
-| 200        | OK                    | `Result` field    | Dentist or assistant was found.  |
+| 200        | Customer.NotFound     | `Result` field    | Assistant not found.  |
+| 200        | Assistant.NotFound    | `Result` field    | Assistant not found.  |
+| 200        | OK                    | `Result` field    | Assistant was found.  |
 | 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
-In case of `OK`, the `Messages` field has the **Dentist identifier** and the following 
-information about the practice dentist or assistant is returned in the proper 
-fields.
-- Dentist identifier, Initials, Lastname and Specialty
-- Dentist email, BIG number and KNMT number ( *if available* )
+In case of `OK`, the `Messages` field has the **Assistant identifier** and the following 
+information about the assistant is returned in the proper fields.
 - Assistant identifier, Initials, Lastname and Email
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -521,15 +835,6 @@ fields.
 
         {
             "InformationDate": "string",
-            "Dentist": {
-                "DentistId": "string",
-                "BigNumber": "string",
-                "KnmtNumber": "string",
-                "Initials": "string",
-                "LastName": "string",
-                "Specialty": "string",
-                "Email": "string"
-            },
             "Assistant": {
                 "AssistantId": "string",
                 "Initials": "string",
@@ -555,6 +860,8 @@ fields.
     + Headers
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+# Group Patient API
 
 ## Patient > Create [/patient/create]
 
@@ -725,7 +1032,7 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
         
-## Patient > Get Information [/patient/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get [/patient/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -770,6 +1077,84 @@ information about the patient is returned in the proper fields.
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "FirstName": "string",
+            "LastName": "string",
+            "BirthDate": "string",
+            "Gender": "string",
+            "Bloodgroup": "string",
+            "Length": "string",
+            "Weight": "string",
+            "City": "string",
+            "Country": "string",
+            "PatientStatus": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Patient > Get with BSN [/patient/bsn/get?hashedBsn={hashedBsn}&token={token}]
+
++ Parameters
+    + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get details about the given patient. The information
+will be given only if the patient belongs to the specified practice.
+
+***Usage***
+
+The request must contain the `token` and the patient unique `BSN` ( *in hashed format* ).
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the patient is returned in the proper fields.
+- Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- BSN number ( *hashed if available* )
+- Height ( *cm* ) and Weight ( *kg* )
+- Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
+- First Name, Last Name, Blood Group, City and Country ( *if available* )
+- Date when this request was issued ( *dd-mm-yyyy* )
 
 + Response 200 (application/json)
 
@@ -870,6 +1255,8 @@ In case of `OK`, the `Messages` field has the **AGB code**.
     + Headers
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+# Group Subscription API
 
 ## Subscription > Activate [/subscription/activate?practiceagb={practiceagb}&email={email}&token={token}]
 
@@ -1098,6 +1485,27 @@ information about the subscription is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
+# Group Single SignOn
+
+This API has an indirect goal which to allow the use of [**meamedica|dental**](http://www.meamedicadental.com) 
+solution in our clients dental software, integrated via a *Single SignOn* method. 
+This method works by setting the URL below (with the right set of parameters) in a 
+browser object contained within the referred dental software.
+
+*Syntax*
+
+```
+https://dental.meamedica.nl/<ClientName>/sso/<PracticeAGB>/<DentistId|AssistantId|BIGNumber>/<PatientNr|HashedBSN>/<Token>
+```
+
+Being each one:
+- **ClientName:** a text indicating our client's name, e.g. "google"
+- **PracticeAGB:** the unique practice identifier
+- **DentistId|AssistantId|BIGNumber:** some of our clients will send an unique dentist 
+or assistant identifier within the practice while others will send the unique BIG number
+- **PatientNr|HashedBSN:** some of our clients will send an unique patient identifier
+within the practice while others will send the unique *hashed* BSN
+
 # Group Technical Reference
 
 As a background note this API documentation is hosted at and was done using 
@@ -1107,7 +1515,7 @@ it can be found in the following URLs:
 - **API Examples** : https://github.com/apiaryio/api-blueprint/tree/master/examples
 - **API Blueprint** : https://apiblueprint.org/ (detailed technical information)
 
-As described before the **BSN number** is received hashed and more information about 
+As described before the **BSN number** is received *hashed* and more information about 
 this process can be found in the following URLs:
 - **Secure Hash Algorithm** : https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
 - **SHA-256** : https://en.wikipedia.org/wiki/SHA-2
