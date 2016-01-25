@@ -96,6 +96,10 @@ New API methods: Patient > Get with BSN ( *hashed* ). Dentist and Assistant meth
 were redesigned and are now more flexible. New API method to create an Assistant and a 
 Dentist where the Assistant is assigned to the Dentist.
 
+### v1.4.250120
+New API methods for Patients using an *hashed* BSN. Previous methods that expect a
+combination of Practice AGB and Patient Number are still available.
+
 # Group Common API
 
 ## Authentication > Get Token [/access/get?clientKey={clientKey}]
@@ -863,15 +867,15 @@ information about the assistant is returned in the proper fields.
 
 # Group Patient API
 
-## Patient > Create [/patient/create]
+## Patient > Create [/patient/local/create]
 
 ### API Definition [POST]
 
 ***Description***
 
-This method can be used to create one or more patients for a given practice. 
-It expects to receive some generic data about the patients and about the 
-practice were they are registered.
+This method can be used to create one patient for a given practice. It expects to 
+receive some generic data about the patient and about the practice were he is 
+registered.
 
 ***Usage***
 
@@ -879,11 +883,6 @@ The request must contain the `token`, the practice `AGB code` and some informati
 about the patient to create.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
 - Height ( *cm* ) and Weight ( *kg* )
-- BSN number ( *hashed and optional* )
-
-***NOTE*** the `BSN number` is received in a hashed format and stored that same way
-in the database. This number does not exist in a readable format. For more information
-about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/Secure_Hash_Algorithm) and in more detail [SHA-256](https://en.wikipedia.org/wiki/SHA-2).
 
 ***Response***
 
@@ -899,45 +898,33 @@ about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/
 | 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field    | Patient was not created.         |
+| 200        | Patient.Duplicate     | `Result` field    | Patient already exists.          |
 | 200        | Patient.NotAdded      | `Result` field    | Patient was not created.         |
-| 200        | OK                    | `Result` field    | Patient was created.              |
+| 200        | OK                    | `Result` field    | Patient was created.             |
 | 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 In case of `OK`, the `Messages` field has the **AGB Code** and the following 
 information about the patient is returned in the proper fields.
 - Patient number (in the client system)
-- BSN number ( *hashed if available* )
-- Patient status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
-- Activation URL (only applicable to `Patient.New`, empty otherwise)
+- Activation URL (only if patient is new)
 
 + Request (application/json)
 
         {
             "PracticeAgb": "string",
-            "Patients": [
-                {
-                  "PatientNr": "string",
-                  "BsnHashed": "string",
-                  "Gender": "string",
-                  "Birthdate": "string",
-                  "Height": "string",
-                  "Weight": "string"
-                }
-            ],
+            "PatientNr": "string",
+            "Gender": "string",
+            "Birthdate": "string",
+            "Height": "string",
+            "Weight": "string",
             "Token": "string"
         }
 
 + Response 200 (application/json)
 
         {
-            "Patients": [
-                {
-                  "PatientNr": "string",
-                  "HashedBSN": "string",
-                  "PatientStatus": "string",
-                  "ActivationUrl": "string"
-                }
-            ],
+            "PatientNr": "string",
+            "ActivationUrl": "string"
             "Result": "string",
             "Messages": [
                 "string"
@@ -958,7 +945,7 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Patient > Get Overview [/patient/overview/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get Overview [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1032,7 +1019,7 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
         
-## Patient > Get [/patient/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1113,7 +1100,227 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Patient > Get with BSN [/patient/bsn/get?hashedBsn={hashedBsn}&token={token}]
+## Patient > Close [/patient/local/close]
+
+### API Definition [POST]
+
+***Description***
+
+This method is used to close the activity of a patient inline with the client system.
+The operation will be executed only if the patient belongs to the specified practice.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and the patient 
+`identifier`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was closed.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code**.
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "PatientNr": "string",
+            "Token": "string"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Patient > Create with BSN [/patient/create]
+
+### API Definition [POST]
+
+***Description***
+
+This method can be used to create one patient identified by the hashed BSN. 
+It expects to receive some generic data about the patient and about the 
+practice were he is registered.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and some information 
+about the patient to create.
+- BSN number ( *hashed* ), Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- Height ( *cm* ) and Weight ( *kg* )
+
+***NOTE*** the `BSN number` is received in a hashed format and stored that same way
+in the database. This number does not exist in a readable format. For more information
+about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/Secure_Hash_Algorithm) and in more detail [SHA-256](https://en.wikipedia.org/wiki/SHA-2).
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.Duplicate    | `Result` field    | Patient already exists.          |
+| 200        | Customer.NotAdded     | `Result` field    | Patient was not created.         |
+| 200        | Patient.NotAdded      | `Result` field    | Patient was not created.         |
+| 200        | OK                    | `Result` field    | Patient was created.             |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the patient is returned in the proper fields.
+- BSN number ( *hashed* )
+- Activation URL (only if patient is new)
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "BsnHashed": "string",
+            "Gender": "string",
+            "Birthdate": "string",
+            "Height": "string",
+            "Weight": "string",
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "HashedBSN": "string",
+            "ActivationUrl": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Patient > Get Overview with BSN [/patient/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + patientnr: 1 (required, number) - patient identifier in client system
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get an overview of some patient information. The information
+will be given for the patient identified by the hashed BSN.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and the patient unique
+`BSN` ( *in hashed format* ).
+
+***Response***
+
+| HTTP Code  | API Code              | Found in          | Description                      |
+| :--------: | :-------------------- | :---------------- | :------------------------------- |
+| 400        | Token.Missing         | `Response Body`   | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `Response Header` | ClientKey is not valid.          |
+| 401        | Token.Expired         | `Response Header` | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `Response Body`   | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field    | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field    | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Patient not found.               |
+| 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
+| 200        | OK                    | `Result` field    | Patient was found.               |
+| 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the patient is returned in the proper fields.
+- BSN number ( *hashed* )
+- Latest ASA score, Number of medicines in use
+- Number of MTI messages, Allergic to anesthesia
+- Date when this request was issued ( *dd-mm-yyyy* )
+
++ Response 200 (application/json)
+
+        {
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "AsaScore": "string",
+            "NrOfMedicines": "string",
+            "NrOfMtiMessages": "string",
+            "AnesthesiaAllergy": "string",
+            "InformationDate": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
++ Response 400 (application/json)
+
+    + Body
+
+            <Error><Message>Token.Missing</Message></Error> 
+            or 
+            <Error><Message>Missing.Parameters</Message></Error>
+
++ Response 401 (application/json)
+    
+    + Headers
+
+            WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
+
+## Patient > Get with BSN [/patient/get?hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
     + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
@@ -1124,7 +1331,7 @@ information about the patient is returned in the proper fields.
 ***Description***
 
 This method is used to get details about the given patient. The information
-will be given only if the patient belongs to the specified practice.
+will be given for the patient identified by the hashed BSN.
 
 ***Usage***
 
@@ -1143,14 +1350,15 @@ The request must contain the `token` and the patient unique `BSN` ( *in hashed f
 | 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Patient not found.               |
 | 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
 | 200        | OK                    | `Result` field    | Patient was found.               |
 | 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 In case of `OK`, the `Messages` field has the **AGB code** and the following 
 information about the patient is returned in the proper fields.
-- Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- BSN number ( *hashed if available* )
+- BSN number ( *hashed* )
+- Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
 - Height ( *cm* ) and Weight ( *kg* )
 - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
@@ -1192,19 +1400,19 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Patient > Close [/patient/close]
+## Patient > Close with BSN [/patient/close]
 
 ### API Definition [POST]
 
 ***Description***
 
 This method is used to close the activity of a patient inline with the client system.
-The operation will be executed only if the patient belongs to the specified practice.
+The operation will be executed only for the patient identified by the hashed BSN.
 
 ***Usage***
 
-The request must contain the `token`, the practice `AGB code` and the patient 
-`identifier`.
+The request must contain the `token`, the practice `AGB code` and the patient unique 
+`BSN` ( *in hashed format* ).
 
 ***Response***
 
@@ -1219,8 +1427,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 | 200        | Subscription.Expired  | `Result` field    | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field    | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field    | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field    | Patient not found.               |
 | 200        | Patient.NotFound      | `Result` field    | Patient not found.               |
-| 200        | OK                    | `Result` field    | Patient was closed.               |
+| 200        | OK                    | `Result` field    | Patient was closed.              |
 | 200        | Unexpected.Error      | `Result` field    | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 In case of `OK`, the `Messages` field has the **AGB code**.
@@ -1228,8 +1437,7 @@ In case of `OK`, the `Messages` field has the **AGB code**.
 + Request (application/json)
 
         {
-            "PracticeAgb": "string",
-            "PatientNr": "string",
+            "HashedBsn": "string",
             "Token": "string"
         }
         
