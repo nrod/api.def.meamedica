@@ -1246,11 +1246,10 @@ information about the patient is returned in the proper fields.
 
             WWW-Authenticate:ClientKey.NoAccess or WWW-Authenticate:Token.Expired
 
-## Patient > Get Overview with BSN [/patient/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get Overview with BSN [/patient/getOverview?hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
-    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + patientnr: 1 (required, number) - patient identifier in client system
+    + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
 ### API Definition [GET]
