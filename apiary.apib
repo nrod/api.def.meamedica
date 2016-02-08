@@ -137,6 +137,16 @@ during a specific time period and will be similar to:
 | 200        | `token`            | `Token` field   | A valid token was issued.     |
 | 200        | Unexpected.Error   | `Token` field   | Contact us via [email](<mailto:info@meamedica.nl>). |
 
+***Please note:*** in all the methods the `message` field can be found in the following 
+response JSON structure:
+```
+{
+  "status": <http-error-code>,
+  "source": "<full-url-called>",
+  "message": "ClientKey.NoAccess"
+}
+```
+
 + Response 200 (application/json)
 
         {
