@@ -102,7 +102,8 @@ combination of Practice AGB and Patient Number are still available.
 
 ### v1.5.160205
 Some Patient methods now require the Practice AGB code. Dentist > Get methods also 
-had a tiny signature change. Several internal optimizations.
+had a small signature change. Several internal optimizations made Authorization errors
+to be part of Response Body instead of Response Header.
 
 # Group Common API
 
@@ -131,8 +132,8 @@ during a specific time period and will be similar to:
 
 | HTTP Code  | API Code           | Found in        | Description                   |
 | :--------: | :----------------- | :-------------- | :---------------------------- |
-| 400        | ClientKey.Missing  | `Response Body` | No ClientKey was given.       |
-| 401        | ClientKey.NoAccess | `Response Body` | ClientKey is not valid.       |
+| 400        | ClientKey.Missing  | `message` field | No ClientKey was given.       |
+| 401        | ClientKey.NoAccess | `message` field | ClientKey is not valid.       |
 | 200        | `token`            | `Token` field   | A valid token was issued.     |
 | 200        | Unexpected.Error   | `Token` field   | Contact us via [email](<mailto:info@meamedica.nl>). |
 
@@ -141,18 +142,6 @@ during a specific time period and will be similar to:
         {
             "Token": "string"
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>ClientKey.Missing</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
 
 ## Current Version > Get [/version]
 
@@ -197,10 +186,10 @@ The request must contain the `token` and some information about the practice:
 
 | HTTP Code  | API Code           | Found in        | Description                      |
 | :--------: | :----------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing      | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired      | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing      | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired      | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters | `message` field | Required parameters are missing. |
 | 200        | Practice.Exists    | `Result` field  | Practice AGB already exists.     |
 | 200        | Practice.NotAdded  | `Result` field  | Practice was not created.        |
 | 200        | OK                 | `Result` field  | Practice was created.            |
@@ -227,22 +216,6 @@ The request must contain the `token` and some information about the practice:
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Practice > Get [/practice/get?practiceAgb={practiceAgb}&token={token}]
 
@@ -265,10 +238,10 @@ The request must contain the `token` and the practice `AGB code`.
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Practice.Missing      | `message` field | No practice AGB was given.       |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -297,22 +270,6 @@ information about the practice is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
 
@@ -335,10 +292,10 @@ The request must contain the `token` and the practice `AGB code`.
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Practice.Missing      | `message` field | No practice AGB was given.       |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -367,7 +324,8 @@ fields.
                     "Initials": "string",
                     "LastName": "string",
                     "Specialty": "string",
-                    "Email": "string"
+                    "Email": "string",
+                    "IsStudent": "string"
                 }
             ],
             "Assistants": [
@@ -383,22 +341,6 @@ fields.
                 "string"
             ],
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 # Group Dentist API
 
@@ -427,17 +369,17 @@ Onbekend.*
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field  | Dentist was not created.         |
-| 200        | Customer.Duplicate    | `Result` field  | Dentist already exists.          |
+| 200        | Dentist.NotFound      | `Result` field  | Dentist was not found.           |
 | 200        | Dentist.NotAdded      | `Result` field  | Dentist was not created.         |
 | 200        | Dentist.Exists        | `Result` field  | Dentist already exists.          |
 | 200        | Dentist.NoSpecialty   | `Result` field  | Specialty was not found.         |
@@ -473,22 +415,6 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Dentist + Assistant > Create [/dentist/assistant/create]
 
@@ -518,10 +444,10 @@ Onbekend.*
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -529,7 +455,7 @@ Onbekend.*
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Assistant.NotAdded    | `Result` field  | Assistant was not created.       |
 | 200        | Customer.NotAdded     | `Result` field  | Dentist was not created.         |
-| 200        | Customer.Duplicate    | `Result` field  | Dentist already exists.          |
+| 200        | Dentist.NotFound      | `Result` field  | Dentist was not found.           |
 | 200        | Dentist.NotAdded      | `Result` field  | Dentist was not created.         |
 | 200        | Dentist.Exists        | `Result` field  | Dentist already exists.          |
 | 200        | Dentist.NoSpecialty   | `Result` field  | Specialty was not found.         |
@@ -565,22 +491,6 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Dentist > Get [/dentist/local/get?practiceAgb={practiceAgb}&dentistId={dentistId}&token={token}]
 
@@ -604,10 +514,11 @@ The request must contain the `token`, the practice `AGB code` and the dentist `i
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | Dentist.Missing       | `message` field | No dentist identifier given.     |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -643,22 +554,6 @@ information about the dentist is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Dentist > Get with BIG [/dentist/get?practiceAgb={practiceAgb}&bigNumber={bigNumber}&token={token}]
 
@@ -682,10 +577,10 @@ The request must contain the `token`, the practice `AGB code` and the dentist `B
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -721,22 +616,6 @@ information about the dentist is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 # Group Assistant API
 
@@ -759,17 +638,16 @@ create. In one request, one or more assistants can be created.
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field  | Assistant was not created.       |
-| 200        | Customer.Duplicate    | `Result` field  | Assistant already exists.        |
 | 200        | Assistant.NotAdded    | `Result` field  | Assistant was not created.       |
 | 200        | Assistant.Exists      | `Result` field  | Assistant already exists.        |
 | 200        | OK                    | `Result` field  | Assistant was created.           |
@@ -800,22 +678,6 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Assistant > Get [/assistant/get?practiceAgb={practiceAgb}&assistantId={assistantId}&token={token}]
 
@@ -840,10 +702,10 @@ The request must contain the `token`, the practice `AGB code` and the assistant
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -874,22 +736,6 @@ information about the assistant is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 # Group Patient API
 
@@ -914,17 +760,17 @@ about the patient to create.
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
-| 200        | Patient.Duplicate     | `Result` field  | Patient already exists.          |
+| 200        | Patient.Exists        | `Result` field  | Patient already exists.          |
 | 200        | Patient.NotAdded      | `Result` field  | Patient was not created.         |
 | 200        | OK                    | `Result` field  | Patient was created.             |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -956,22 +802,6 @@ information about the patient is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Patient > Get Overview [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
@@ -996,10 +826,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :---------------| :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1032,23 +861,7 @@ information about the patient is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
 
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
-        
 ## Patient > Get [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
@@ -1072,10 +885,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :---------------| :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1115,22 +927,6 @@ information about the patient is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Patient > Close [/patient/local/close]
 
@@ -1150,10 +946,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :---------------| :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1181,22 +976,6 @@ In case of `OK`, the `Messages` field has the **AGB code**.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Patient > Create with BSN [/patient/create]
 
@@ -1223,10 +1002,10 @@ about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1234,6 +1013,7 @@ about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.Duplicate    | `Result` field  | Patient already exists.          |
 | 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
+| 200        | Patient.NotFound      | `Result` field  | Patient was not found.           |
 | 200        | Patient.NotAdded      | `Result` field  | Patient was not created.         |
 | 200        | OK                    | `Result` field  | Patient was created.             |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -1265,26 +1045,11 @@ information about the patient is returned in the proper fields.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
 
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
-
-## Patient > Get Overview with BSN [/patient/getOverview?hashedBsn={hashedBsn}&token={token}]
+## Patient > Get Overview with BSN [/patient/getOverview?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
     + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
@@ -1293,7 +1058,7 @@ information about the patient is returned in the proper fields.
 ***Description***
 
 This method is used to get an overview of some patient information. The information
-will be given for the patient identified by the hashed BSN.
+will be given for the patient identified by the hashed BSN and the practice AGB.
 
 ***Usage***
 
@@ -1304,10 +1069,9 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1323,6 +1087,7 @@ information about the patient is returned in the proper fields.
 - BSN number ( *hashed* )
 - Latest ASA score, Number of medicines in use
 - Number of MTI messages, Allergic to anesthesia
+- Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 + Response 200 (application/json)
@@ -1335,31 +1100,18 @@ information about the patient is returned in the proper fields.
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
             "InformationDate": "string",
+            "PatientStatus": "string",
+            "ActivationUrl": "string",
             "Result": "string",
             "Messages": [
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
 
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
-
-## Patient > Get with BSN [/patient/get?hashedBsn={hashedBsn}&token={token}]
+## Patient > Get with BSN [/patient/get?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
     + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
     + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
 
@@ -1368,7 +1120,7 @@ information about the patient is returned in the proper fields.
 ***Description***
 
 This method is used to get details about the given patient. The information
-will be given for the patient identified by the hashed BSN.
+will be given for the patient identified by the hashed BSN and the practice AGB.
 
 ***Usage***
 
@@ -1378,10 +1130,10 @@ The request must contain the `token` and the patient unique `BSN` ( *in hashed f
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1397,7 +1149,7 @@ information about the patient is returned in the proper fields.
 - BSN number ( *hashed* )
 - Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
 - Height ( *cm* ) and Weight ( *kg* )
-- Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
+- Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -1417,27 +1169,12 @@ information about the patient is returned in the proper fields.
             "City": "string",
             "Country": "string",
             "PatientStatus": "string",
+            "ActivationUrl": "string",
             "Result": "string",
             "Messages": [
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 ## Patient > Close with BSN [/patient/close]
 
@@ -1457,10 +1194,10 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 
 | HTTP Code  | API Code              | Found in        | Description                      |
 | :--------: | :-------------------- | :---------------| :------------------------------- |
-| 400        | Token.Missing         | `Response Body` | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `Response Body` | ClientKey is not valid.          |
-| 401        | Token.Expired         | `Response Body` | Token is no longer valid.        |
-| 400        | Missing.Parameters    | `Response Body` | Required parameters are missing. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
@@ -1488,22 +1225,6 @@ In case of `OK`, the `Messages` field has the **AGB code**.
                 "string"
             ]
         }
-        
-+ Response 400 (application/json)
-
-    + Body
-
-            <Error><Message>Token.Missing</Message></Error> 
-            or 
-            <Error><Message>Missing.Parameters</Message></Error>
-
-+ Response 401 (application/json)
-    
-    + Body
-    
-            <Error><Message>ClientKey.NoAccess</Message></Error>
-            or
-            <Error><Message>Token.Expired</Message></Error>
 
 # Group Single SignOn
 
