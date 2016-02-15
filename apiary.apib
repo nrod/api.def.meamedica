@@ -105,6 +105,9 @@ Some Patient methods now require the Practice AGB code. Dentist > Get methods al
 had a small signature change. Several internal optimizations made Authorization errors
 to be part of Response Body instead of Response Header.
 
+### v1.6.160215
+Weight and the Height are not optional in the Create Patient methods.
+
 # Group Common API
 
 ## Authentication > Get Token [/access/get?clientKey={clientKey}]
@@ -766,7 +769,7 @@ registered.
 The request must contain the `token`, the practice `AGB code` and some information 
 about the patient to create.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- Height ( *cm* ) and Weight ( *kg* )
+- Height ( *cm* ) and Weight ( *kg* ) ( *optional fields* )
 
 ***Response***
 
@@ -1010,7 +1013,7 @@ practice were he is registered.
 The request must contain the `token`, the practice `AGB code` and some information 
 about the patient to create.
 - BSN number ( *hashed* ), Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- Height ( *cm* ) and Weight ( *kg* )
+- Height ( *cm* ) and Weight ( *kg* ) ( *optional fields* )
 
 ***NOTE*** the `BSN number` is received in a hashed format and stored that same way
 in the database. This number does not exist in a readable format. For more information
