@@ -106,7 +106,9 @@ had a small signature change. Several internal optimizations made Authorization 
 to be part of Response Body instead of Response Header.
 
 ### v1.6.160215
-Weight and the Height are not optional in the Create Patient methods.
+Weight and the Height are not optional in the Create Patient methods. Dentist > Create
+and Dentist + Assistant > Create no longer need the IsStudent field. Specialties for a 
+Dentist were updated and an Assistant now needs a specialty as well.
 
 # Group Common API
 
@@ -337,8 +339,7 @@ fields.
                     "Initials": "string",
                     "LastName": "string",
                     "Specialty": "string",
-                    "Email": "string",
-                    "IsStudent": "string"
+                    "Email": "string"
                 }
             ],
             "Assistants": [
@@ -346,6 +347,7 @@ fields.
                     "AssistantId": "string",
                     "Initials": "string",
                     "LastName": "string",
+                    "Specialty": "string",
                     "Email": "string"
                 }
             ],
@@ -370,13 +372,12 @@ AGB code is required as matching identifier.
 
 The request must contain the `token` and some information about the dentist to create. 
 In one request, one or more dentists can be created.
-- Dentist identifier, Initials, Lastname, Specialty and if it is a Student
+- Dentist identifier, Initials, Lastname and Specialty
 - Dentist email, BIG number and KNMT number ( *all optional* )
 
-Accepted specialties are: *Tandarts, Mondhygiënist, Tandprothetica, Tandartsassistent, 
-MKA-chirurg, Paradontoloog, Endodontoloog, Pedodontoloog, Implantoloog, Gnatholoog, 
-Orthodontist, Revalidatie arts, Medisch specialist, Psycholoog, Preventie-assistent, 
-Onbekend.*
+Accepted specialties are: *Tandarts, MKA-chirurg, Paradontoloog, Endodontoloog, 
+Pedodontoloog, Implantoloog, Gnatholoog, Orthodontist, Revalidatie arts, 
+Medisch specialist, Psycholoog, Onbekend.*
 
 ***Response***
 
@@ -413,8 +414,7 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                   "Initials": "string",
                   "LastName": "string",
                   "Specialty": "string",
-                  "Email": "string",
-                  "IsStudent": "string"
+                  "Email": "string"
                 }
             ],
             "Token": "string"
@@ -444,14 +444,16 @@ The practice AGB code is required as matching identifier.
 
 The request must contain the `token` and some information about the dentist and the
 assistant to create. 
-- Dentist identifier, Initials, Lastname, Specialty and if it is a Student
+- Dentist identifier, Initials, Lastname and Specialty
 - Dentist email, BIG number and KNMT number ( *all optional* )
 - Assistant identifier, Initials, Lastname and Email
 
-Accepted specialties are: *Tandarts, Mondhygiënist, Tandprothetica, Tandartsassistent, 
-MKA-chirurg, Paradontoloog, Endodontoloog, Pedodontoloog, Implantoloog, Gnatholoog, 
-Orthodontist, Revalidatie arts, Medisch specialist, Psycholoog, Preventie-assistent, 
-Onbekend.*
+Accepted specialties for the Dentist are: *Tandarts, MKA-chirurg, Paradontoloog, 
+Endodontoloog, Pedodontoloog, Implantoloog, Gnatholoog, Orthodontist, 
+Revalidatie arts, Medisch specialist, Psycholoog, Onbekend.*
+
+Accepted specialties for the Assistant are: *Mondhygiënist, Tandprotheticus, 
+Tandartsassistent, Preventie-assistent, Stagiair, Student, Onbekend.*
 
 ***Response***
 
@@ -467,6 +469,7 @@ Onbekend.*
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Assistant.NotAdded    | `Result` field  | Assistant was not created.       |
+| 200        | Assistant.NoSpecialty | `Result` field  | Assistant specialty not found.   |
 | 200        | Customer.NotAdded     | `Result` field  | Dentist was not created.         |
 | 200        | Dentist.NotFound      | `Result` field  | Dentist was not found.           |
 | 200        | Dentist.NotAdded      | `Result` field  | Dentist was not created.         |
@@ -488,10 +491,10 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
             "LastName": "string",
             "Specialty": "string",
             "Email": "string",
-            "IsStudent": "string",
             "AssistantId": "string",
             "AssistantInitials": "string",
             "AssistantLastName": "string",
+            "AssistantSpecialty": "string",
             "AssistantEmail": "string",
             "Token": "string"
         }
@@ -544,7 +547,7 @@ The request must contain the `token`, the practice `AGB code` and the dentist `i
 
 In case of `OK`, the `Messages` field has the **Dentist identifier** and the following 
 information about the dentist is returned in the proper fields.
-- Dentist identifier, Initials, Lastname, Specialty and if it is Student
+- Dentist identifier, Initials, Lastname and Specialty
 - Dentist email, BIG number and KNMT number ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -559,8 +562,7 @@ information about the dentist is returned in the proper fields.
                 "Initials": "string",
                 "LastName": "string",
                 "Specialty": "string",
-                "Email": "string",
-                "IsStudent": "string"
+                "Email": "string"
             },
             "Result": "string",
             "Messages": [
@@ -607,7 +609,7 @@ The request must contain the `token`, the practice `AGB code` and the dentist `B
 
 In case of `OK`, the `Messages` field has the **Dentist BIG** number and the following 
 information about the dentist is returned in the proper fields.
-- Dentist identifier, Initials, Lastname, Specialty and if it is Student
+- Dentist identifier, Initials, Lastname and Specialty
 - Dentist email, BIG number and KNMT number ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -622,8 +624,7 @@ information about the dentist is returned in the proper fields.
                 "Initials": "string",
                 "LastName": "string",
                 "Specialty": "string",
-                "Email": "string",
-                "IsStudent": "string"
+                "Email": "string"
             },
             "Result": "string",
             "Messages": [
@@ -646,7 +647,11 @@ practice AGB code is required as matching identifier.
 
 The request must contain the `token` and some information about the assistant to 
 create. In one request, one or more assistants can be created.
-- Assistant identifier, Initials, Lastname and Email
+- Assistant identifier, Initials, Lastname and Specialty
+- Email ( *optional* )
+
+Accepted specialties are: *Mondhygiënist, Tandprotheticus, Tandartsassistent, 
+Preventie-assistent, Stagiair, Student, Onbekend.*
 
 ***Response***
 
@@ -662,6 +667,7 @@ create. In one request, one or more assistants can be created.
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field  | Assistant was not created.       |
+| 200        | Assistant.NoSpecialty | `Result` field  | Specialty was not found.         |
 | 200        | Assistant.NotAdded    | `Result` field  | Assistant was not created.       |
 | 200        | Assistant.Exists      | `Result` field  | Assistant already exists.        |
 | 200        | OK                    | `Result` field  | Assistant was created.           |
@@ -678,6 +684,7 @@ In case of `OK`, the `Messages` field has the **AGB Code**.
                   "AssistantId": "string",
                   "Initials": "string",
                   "LastName": "string",
+                  "Specialty": "string",
                   "Email": "string"
                 }
             ],
@@ -733,7 +740,8 @@ The request must contain the `token`, the practice `AGB code` and the assistant
 
 In case of `OK`, the `Messages` field has the **Assistant identifier** and the following 
 information about the assistant is returned in the proper fields.
-- Assistant identifier, Initials, Lastname and Email
+- Assistant identifier, Initials, Lastname and Specialty
+- Email ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 + Response 200 (application/json)
@@ -744,6 +752,7 @@ information about the assistant is returned in the proper fields.
                 "AssistantId": "string",
                 "Initials": "string",
                 "LastName": "string",
+                "Specialty": "string",
                 "Email": "string"
             },
             "Result": "string",
@@ -920,7 +929,7 @@ In case of `OK`, the `Messages` field has the **AGB code** and the following
 information about the patient is returned in the proper fields.
 - Patient identifier, Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
 - BSN number ( *hashed if available* )
-- Height ( *cm* ) and Weight ( *kg* )
+- Height ( *cm* ) and Weight ( *kg* ) ( *if available* )
 - Patient Status (`Patient.New`, `Patient.Inactive`, `Patient.Active`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
@@ -1172,7 +1181,7 @@ In case of `OK`, the `Messages` field has the **AGB code** and the following
 information about the patient is returned in the proper fields.
 - BSN number ( *hashed* )
 - Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
-- Height ( *cm* ) and Weight ( *kg* )
+- Height ( *cm* ) and Weight ( *kg* ) ( *if available* )
 - Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - First Name, Last Name, Blood Group, City and Country ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
