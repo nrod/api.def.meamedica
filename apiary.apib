@@ -105,10 +105,12 @@ Some Patient methods now require the Practice AGB code. Dentist > Get methods al
 had a small signature change. Several internal optimizations made Authorization errors
 to be part of Response Body instead of Response Header.
 
-### v1.6.160215
+### v1.6.160219
 Weight and the Height are not optional in the Create Patient methods. Dentist > Create
-and Dentist + Assistant > Create no longer need the IsStudent field. Specialties for a 
-Dentist were updated and an Assistant now needs a specialty as well.
+no longer need the IsStudent field. Specialties for a Dentist were updated and an 
+Assistant now needs a specialty as well. Dentist + Assistant > Create API method was
+removed. Patient > Get Overview methods now return additional information about the
+reasons behind the ASA score (when available).
 
 # Group Common API
 
@@ -207,6 +209,7 @@ The request must contain the `token` and some information about the practice:
 | 400        | Missing.Parameters | `message` field | Required parameters are missing. |
 | 200        | Practice.Exists    | `Result` field  | Practice AGB already exists.     |
 | 200        | Practice.NotAdded  | `Result` field  | Practice was not created.        |
+| 200        | Practice.Duplicate | `Result` field  | Practice already exists.         |
 | 200        | OK                 | `Result` field  | Practice was created.            |
 | 200        | Unexpected.Error   | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
 
