@@ -105,7 +105,7 @@ Some Patient methods now require the Practice AGB code. Dentist > Get methods al
 had a small signature change. Several internal optimizations made Authorization errors
 to be part of Response Body instead of Response Header.
 
-### v1.6.160219
+### v1.5.160219
 Weight and the Height are not optional in the Create Patient methods. Dentist > Create
 no longer need the IsStudent field. Specialties for a Dentist were updated and an 
 Assistant now needs a specialty as well. Dentist + Assistant > Create API method was
@@ -802,6 +802,7 @@ information about the patient is returned in the proper fields.
             "PatientNr": "string",
             "HashedBSN": "string",
             "AsaScore": "string",
+            "AnamneseDate": "string",
             "AnamneseInfo": [
                 {
                   "AsaScore": 0,
@@ -813,6 +814,8 @@ information about the patient is returned in the proper fields.
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
             "InformationDate": "string",
+            "PatientStatus": "string",
+            "ActivationUrl": "string",
             "Result": "string",
             "Messages": [
                 "string"
@@ -1059,6 +1062,7 @@ information about the patient is returned in the proper fields.
             "PatientNr": "string",
             "HashedBSN": "string",
             "AsaScore": "string",
+            "AnamneseDate": "string",
             "AnamneseInfo": [
                 {
                   "AsaScore": 0,
