@@ -792,7 +792,8 @@ In case of `OK`, the `Messages` field has the **AGB code** and the following
 information about the patient is returned in the proper fields.
 - Patient identifier
 - BSN number ( *hashed if available* )
-- Latest ASA score with related Questions and Answers, Number of medicines in use
+- Latest ASA score with related Questions and Answers
+- Number of medicines in use and related medicine information
 - Number of MTI messages, Allergic to anesthesia
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -811,6 +812,13 @@ information about the patient is returned in the proper fields.
                 }
             ],
             "NrOfMedicines": "string",
+            "MedicineInfo": [
+                {
+                  "Name": 0,
+                  "GenericName": "string",
+                  "Dosage": "string"
+                }
+            ],
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
             "InformationDate": "string",
@@ -1051,7 +1059,8 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 In case of `OK`, the `Messages` field has the **AGB code** and the following 
 information about the patient is returned in the proper fields.
 - BSN number ( *hashed* )
-- Latest ASA score with related Questions and Answers, Number of medicines in use
+- Latest ASA score with related Questions and Answers
+- Number of medicines in use and related medicine information
 - Number of MTI messages, Allergic to anesthesia
 - Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - Date when this request was issued ( *dd-mm-yyyy* )
@@ -1071,6 +1080,13 @@ information about the patient is returned in the proper fields.
                 }
             ],
             "NrOfMedicines": "string",
+            "MedicineInfo": [
+                {
+                  "Name": 0,
+                  "GenericName": "string",
+                  "Dosage": "string"
+                }
+            ],
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
             "InformationDate": "string",
