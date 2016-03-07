@@ -89,10 +89,10 @@ it is also sent hashed. Some other minor improvements and optimizations.
 
 ### v1.4.160114
 Full revision of return codes and inclusion of HTTP codes in some cases. 
-BSN number is now optional in Patient > Create. More improvements and optimizations.
+BSN number is now optional in `Patient > Create`. More improvements and optimizations.
 
 ### v1.4.160120
-New API methods: Patient > Get with BSN ( *hashed* ). Dentist and Assistant methods 
+New API methods: `Patient > Get` with BSN ( *hashed* ). Dentist and Assistant methods 
 were redesigned and are now more flexible. New API method to create an Assistant and a 
 Dentist where the Assistant is assigned to the Dentist.
 
@@ -101,16 +101,23 @@ New API methods for Patients using an *hashed* BSN. Previous methods that expect
 combination of Practice AGB and Patient Number are still available.
 
 ### v1.5.160205
-Some Patient methods now require the Practice AGB code. Dentist > Get methods also 
+Some Patient methods now require the Practice AGB code. `Dentist > Get` methods also 
 had a small signature change. Several internal optimizations made Authorization errors
 to be part of Response Body instead of Response Header.
 
 ### v1.5.160219
-Weight and the Height are not optional in the Create Patient methods. Dentist > Create
+Weight and the Height are not optional in the Create Patient methods. `Dentist > Create`
 no longer need the IsStudent field. Specialties for a Dentist were updated and an 
-Assistant now needs a specialty as well. Dentist + Assistant > Create API method was
-removed. Patient > Get Overview methods now return additional information about the
-reasons behind the ASA score (when available).
+Assistant now needs a specialty as well. `Dentist + Assistant > Create` API method was
+removed. `Patient > Get Overview` methods now return additional information about the
+reasons behind the ASA score (when available) and medicine information.
+
+### v1.6.160307
+New API CareProfessional made out of the Dentist and Assistant APIs. The idea is to
+use only the CareProfessional API and include in the input which Specialty the care
+professional has. Dentist and Assistant APIs will be removed in due time. Adjustments
+were made in `Practice > Get Dentists` to return also Care Professionals but the new
+`Practice > Get Care Professionals` should be used instead.
 
 # Group Common API
 
@@ -289,7 +296,7 @@ information about the practice is returned in the proper fields.
             ]
         }
 
-## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
+## Practice > Get Care Professionals [/practice/careprofessionals/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -299,8 +306,9 @@ information about the practice is returned in the proper fields.
 
 ***Description***
 
-This method is used to get detailed information about the dentists and assistants
-that work in the practice identified by the AGB code given as parameter.
+This method is used to get detailed information about the care professionals (dentists, 
+assistants or others) that work in the practice identified by the AGB code given as 
+parameter.
 
 ***Usage***
 
@@ -319,21 +327,98 @@ The request must contain the `token` and the practice `AGB code`.
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
 | 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
 | 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
-| 200        | OK                    | `Result` field  | Dentists or assistants were found. |
+| 200        | OK                    | `Result` field  | Care professionals were found.   |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
 
 In case of `OK`, the `Messages` field has the **AGB Code** and the following 
-information about the practice dentists and/or assistants is returned in the proper 
-fields.
-- Dentist identifier, Initials, Lastname and Specialty
-- Dentist email, BIG number and KNMT number ( *if available* )
-- Assistant identifier, Initials, Lastname and Email ( *if available* )
+information about the practice care professionals (dentists and/or assistants and/or
+others) is returned in the proper fields.
+- *Care Professionals*: identifier, initials, lastname and specialty
+- *Care Professionals*: BIG number, KNMT number and email ( *if available* )
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 + Response 200 (application/json)
 
         {
             "InformationDate": "string",
+            "CareProfessionals": [
+                {
+                    "CareProfessionalId": "string",
+                    "Initials": "string",
+                    "LastName": "string",
+                    "Specialty": "string",
+                    "BigNumber": "string",
+                    "KnmtNumber": "string",
+                    "Email": "string"
+                }
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
+            ],
+        }
+
+## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
+
++ Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get detailed information about the care professionals (dentists, 
+assistants or others) that work in the practice identified by the AGB code given as 
+parameter.
+
+***Usage***
+
+The request must contain the `token` and the practice `AGB code`. The method above for 
+Care Professionals should be used instead of this one.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :-------------- | :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB was given.       |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | OK                    | `Result` field  | Care professionals were found.   |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the practice care professionals (dentists and/or assistants) is 
+returned in the proper fields.
+- *Care Professionals*: identifier, initials, lastname and specialty
+- *Care Professionals*: BIG number, KNMT number and email ( *if available* )
+- *Dentists*: identifier, initials, lastname and specialty
+- *Dentists*: BIG number, KNMT number and email ( *if available* )
+- *Assistant*: identifier, initials, lastname and specialty
+- *Assistant*: email ( *if available* )
+- Date when this request was issued ( *dd-mm-yyyy* )
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "CareProfessionals": [
+                {
+                    "CareProfessionalId": "string",
+                    "Initials": "string",
+                    "LastName": "string",
+                    "Specialty": "string",
+                    "BigNumber": "string",
+                    "KnmtNumber": "string",
+                    "Email": "string"
+                }
+            ],
             "Dentists": [
                 {
                     "DentistId": "string",
@@ -358,6 +443,147 @@ fields.
             "Messages": [
                 "string"
             ],
+        }
+        
+# Group Care Professional API
+
+## Care Professional > Create [/careprofessional/create]
+
+### API Definition [POST]
+
+***Description***
+
+This method is meant to add one or more care professionals to an existing practice. 
+Each care professional must specifiy its specialty. Some of them are doctors but some
+might not be. The practice AGB code is required as matching identifier. 
+
+***Usage***
+
+The request must contain the `token` and some information about the care professional
+to create. In one request, one or more care professionals can be created.
+- *Required*: care professional identifier, initials, lastname and specialty
+- *Optional*: BIG number, KNMT number and email address
+
+**Accepted specialties are**: *Tandarts, MKA-chirurg, Parodontoloog, Endodontoloog, 
+Pedodontoloog, Implantoloog, Gnatholoog, Orthodontist, Revalidatie arts, Medisch 
+specialist, Psycholoog, Mondhygiënist, Tandprotheticus, Tandartsassistent, 
+Preventie-assistent, Stagiair, Student, Onbekend.*
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :-------------- | :------------------------------- |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Customer.NotAdded     | `Result` field  | Care Professional was not created.        |
+| 200        | CareProfessional.NotFound    | `Result` field  | Care Professional was not found.   |
+| 200        | CareProfessional.NotAdded    | `Result` field  | Care Professional was not created. |
+| 200        | CareProfessional.Exists      | `Result` field  | Care Professional already exists.  |
+| 200        | CareProfessional.NoSpecialty | `Result` field  | Specialty was not found.           |
+| 200        | OK                    | `Result` field  | Care Professional was created.            |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code**.
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "CareProfessionals": [
+                {
+                  "CareProfessionalId": "string",
+                  "Initials": "string",
+                  "LastName": "string",
+                  "Specialty": "string",
+                  "BigNumber": "string",
+                  "KnmtNumber": "string",
+                  "Email": "string"
+                }
+            ],
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+        
+## Care Professional > Get [/careprofessional/get?practiceAgb={practiceAgb}&bigNumber={bigNumber}&careprofessionalId={careprofessionalId}&token={token}]
+
++ Parameters
+    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + bigNumber: 12345678901 (optional, number) - unique care professional identifier
+    + careprofessionalId: 12345678 (optional, number) - client-side identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get detailed information about a care professional. A care 
+professional can be identified globally by its BIG number or locally to a practice by
+its care professional identifier. If both values are given they must match the same
+care professional to be successful. If none is given an error will occur.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code` and the care professional
+`BIG number` and/or care professional `identifier`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :-------------- | :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | CareProfessional.Missing | `message` field | No care professional identifier given. |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Customer.NotFound     | `Result` field  | Care professional not found.     |
+| 200        | CareProfessional.NotFound | `Result` field  | Care professional not found. |
+| 200        | OK                    | `Result` field  | Care professional was found.     |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **care professional identifier** used 
+and the following information about the care professional is returned in the proper 
+fields.
+- Care professional identifier, initials, lastname and specialty
+- Care professional BIG number, KNMT number and email ( *if available* )
+- Date when this request was issued ( *dd-mm-yyyy* )
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "CareProfessional": {
+                "CareProfessionalId": "string",
+                "Initials": "string",
+                "LastName": "string",
+                "Specialty": "string",
+                "BigNumber": "string",
+                "KnmtNumber": "string",
+                "Email": "string"
+            },
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
         }
 
 # Group Dentist API
