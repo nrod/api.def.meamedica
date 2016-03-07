@@ -1456,14 +1456,15 @@ browser object contained within the referred dental software.
 *Syntax*
 
 ```
-https://dental.meamedica.nl/<ClientName>/sso/<PracticeAGB>/<DentistId|AssistantId|BIGNumber>/<PatientNr|HashedBSN>/<Token>
+https://dental.meamedica.nl/<ClientName>/sso/<PracticeAGB>/<CareProfessionalId|BIGNumber>/<PatientNr|HashedBSN>/<Token>
 ```
 
 Being each one:
 - **ClientName:** a text indicating our client's name, e.g. "google"
 - **PracticeAGB:** the unique practice identifier
-- **DentistId|AssistantId|BIGNumber:** some of our clients will send an unique dentist 
-or assistant identifier within the practice while others will send the unique BIG number
+- **CareProfessionalId|BIGNumber:** some of our clients will send an unique care professional
+identifier (for a dentist, assistant or other) within a certain practice while others 
+will send the unique BIG number
 - **PatientNr|HashedBSN:** some of our clients will send an unique patient identifier
 within the practice while others will send the unique *hashed* BSN
 
