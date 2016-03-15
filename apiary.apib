@@ -913,7 +913,7 @@ information about the assistant is returned in the proper fields.
 
 # Group Patient API
 
-## Patient > Create [/patient/local/create]
+## Patient > Create Local [/patient/local/create]
 
 ### API Definition [POST]
 
@@ -977,7 +977,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get Overview [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get Overview Local [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1056,7 +1056,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Patient > Get Local [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1124,7 +1124,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Close [/patient/local/close]
+## Patient > Close Local [/patient/local/close]
 
 ### API Definition [POST]
 
@@ -1340,7 +1340,8 @@ will be given for the patient identified by the hashed BSN and the practice AGB.
 
 ***Usage***
 
-The request must contain the `token` and the patient unique `BSN` ( *in hashed format* ).
+The request must contain the `token`, the practice `AGB code` and the patient unique
+`BSN` ( *in hashed format* ).
 
 ***Response***
 
