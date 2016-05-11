@@ -1488,3 +1488,10 @@ As described before the **BSN number** is received *hashed* and more information
 this process can be found in the following URLs:
 - **Secure Hash Algorithm** : https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
 - **SHA-256** : https://en.wikipedia.org/wiki/SHA-2
+
+The **BSN** should be hashed in its original format (just numbers) and without adding 
+any kind of characters. This simple rule aims to maintain the hashed **BSN** as a truly 
+global identifier.
+- 112223344 is a valid BSN format to hash
+- 11.222.33.44 is not a valid BSN format to hash
+- 11222-3344 is not a valid BSN format to hash
