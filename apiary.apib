@@ -1186,7 +1186,7 @@ In case of `OK`, the `Messages` field has the **AGB code**.
 ***Description***
 
 This method can be used to create one patient identified by the hashed BSN. 
-It expects to receive some generic data about the patient and about the 
+When hashing the BSN use only numbers. It expects to receive some generic data about the patient and about the 
 practice were he is registered.
 
 ***Usage***
@@ -1261,6 +1261,7 @@ information about the patient is returned in the proper fields.
 
 This method is used to get an overview of some patient information. The information
 will be given for the patient identified by the hashed BSN and the practice AGB.
+When hashing the BSN use only numbers. 
 
 ***Usage***
 
@@ -1341,6 +1342,7 @@ information about the patient is returned in the proper fields.
 
 This method is used to get details about the given patient. The information
 will be given for the patient identified by the hashed BSN and the practice AGB.
+When hashing the BSN use only numbers. 
 
 ***Usage***
 
@@ -1406,7 +1408,7 @@ information about the patient is returned in the proper fields.
 
 This method is used to close the activity of a patient inline with the client system.
 The operation will be executed only for the patient identified by the hashed BSN and
-in the given practice AGB.
+in the given practice AGB. When hashing the BSN use only numbers. 
 
 ***Usage***
 
@@ -1471,7 +1473,7 @@ Being each one:
 identifier (for a dentist, assistant or other) within a certain practice while others 
 will send the unique BIG number
 - **PatientNr|HashedBSN:** some of our clients will send an unique patient identifier
-within the practice while others will send the unique *hashed* BSN
+within the practice while others will send the unique *hashed* BSN (when hashing the BSN use only numbers)
 
 # Group Technical Reference
 
