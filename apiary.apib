@@ -199,7 +199,7 @@ current version. No other possible values can be given. No errors can occur.
 
 # Group Practice API
 
-## Practice > Create [/practice/create]
+## Create [/practice/create]
 
 ### API Definition [POST]
 
@@ -252,7 +252,7 @@ The request must contain the `token` and some information about the practice:
             ]
         }
 
-## Practice > Get [/practice/get?practiceAgb={practiceAgb}&token={token}]
+## Get [/practice/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -306,7 +306,7 @@ information about the practice is returned in the proper fields.
             ]
         }
 
-## Practice > Get Care Professionals [/practice/careprofessionals/get?practiceAgb={practiceAgb}&token={token}]
+## Get Care Professionals [/practice/careprofessionals/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -368,7 +368,7 @@ others) is returned in the proper fields.
             ],
         }
 
-## Practice > Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
+## Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -598,7 +598,7 @@ fields.
 
 # Group Patient API
 
-## Patient > Create Local [/patient/local/create]
+## Create Local [/patient/local/create]
 
 ### API Definition [POST]
 
@@ -662,7 +662,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get Overview Local [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Get Overview Local [/patient/local/getOverview?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -741,7 +741,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get Local [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
+## Get Local [/patient/local/get?practiceagb={practiceagb}&patientnr={patientnr}&token={token}]
 
 + Parameters
     + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -809,7 +809,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Close Local [/patient/local/close]
+## Close Local [/patient/local/close]
 
 ### API Definition [POST]
 
@@ -860,7 +860,7 @@ In case of `OK`, the `Messages` field has the **AGB code**.
             ]
         }
 
-## Patient > Create with BSN [/patient/create]
+## Create with BSN [/patient/create]
 
 ### API Definition [POST]
 
@@ -929,7 +929,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get Overview with BSN [/patient/getOverview?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
+## Get Overview with BSN [/patient/getOverview?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1010,7 +1010,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Get with BSN [/patient/get?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
+## Get with BSN [/patient/get?practiceAgb={practiceAgb}&hashedBsn={hashedBsn}&token={token}]
 
 + Parameters
     + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
@@ -1081,7 +1081,7 @@ information about the patient is returned in the proper fields.
             ]
         }
 
-## Patient > Close with BSN [/patient/close]
+## Close with BSN [/patient/close]
 
 ### API Definition [POST]
 
