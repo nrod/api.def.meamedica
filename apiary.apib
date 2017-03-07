@@ -681,7 +681,8 @@ information about the patient is returned in the proper fields.
 - Patient identifier
 - BSN number ( *hashed if available* )
 - Latest ASA score with related Questions and Answers
-- Number of medicines in use and related medicine information
+- Number of medicines in use and related medicine information (including the 
+`PrescriptionId` if the medicine was prescribed in **meamedica|dental**)
 - Number of MTI messages, Allergic to anesthesia
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -705,7 +706,14 @@ information about the patient is returned in the proper fields.
                 {
                   "Name": 0,
                   "GenericName": "string",
-                  "Dosage": "string"
+                  "Dosage": "string",
+                  "UsageStartDate": "string",
+                  "UsageEndDate": "string",
+                  "UsageQuantity": "string",
+                  "UsageUnit": "string",
+                  "UsageFrequencyNrTimes": "string",
+                  "UsageFrequencyPeriod": "string",
+                  "PrescriptionId": "string"
                 }
             ],
             "NrOfMtiMessages": "string",
@@ -950,7 +958,8 @@ In case of `OK`, the `Messages` field has the **AGB code** and the following
 information about the patient is returned in the proper fields.
 - BSN number ( *hashed* )
 - Latest ASA score with related Questions and Answers
-- Number of medicines in use and related medicine information
+- Number of medicines in use and related medicine information (including the 
+`PrescriptionId` if the medicine was prescribed in **meamedica|dental**)
 - Number of MTI messages, Allergic to anesthesia
 - Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - Date when this request was issued ( *dd-mm-yyyy* )
@@ -975,7 +984,14 @@ information about the patient is returned in the proper fields.
                 {
                   "Name": 0,
                   "GenericName": "string",
-                  "Dosage": "string"
+                  "Dosage": "string",
+                  "UsageStartDate": "string",
+                  "UsageEndDate": "string",
+                  "UsageQuantity": "string",
+                  "UsageUnit": "string",
+                  "UsageFrequencyNrTimes": "string",
+                  "UsageFrequencyPeriod": "string",
+                  "PrescriptionId": "string"
                 }
             ],
             "NrOfMtiMessages": "string",
@@ -1112,6 +1128,251 @@ In case of `OK`, the `Messages` field has the **AGB code**.
                 "string"
             ]
         }
+
+# Group Prescription API
+(**Only in Test environment**)
+## Get List Local [/prescription/local/getList?practiceagb={practiceagb}&patientnr={patientnr}&id={id}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + patientnr: 1 (required, number) - patient identifier in client system
+    + id: 1 (required, number) - prescription identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get details about the specified prescriptions. 
+The information will be given only if the prescriptions belong to the specified patient and were created in the specified practice.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient 
+`identifier` and the prescriptions `identifiers`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :---------------| :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | Patient.Missing       | `message` field | No patient identifier given.     |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
+| 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
+| 200        | OK                    | `Result` field  | Request processed.               |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the prescriptions is returned in the proper fields.
+- Prescription Identifier
+- Prescription Date
+- Identifier (within the client system) of the care professional responsible for the prescription.
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "Prescriptions": [
+                {
+                  "PrescriptionId": "string",
+                  "PrescriptionDate": "string",
+                  "CareProfessionalId": "string"
+                }
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
+## Get Local [/prescription/local/get?practiceagb={practiceagb}&patientnr={patientnr}&id={id}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + patientnr: 1 (required, number) - patient identifier in client system
+    + id: 1 (required, number) - prescription identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get the .pdf of the specified prescription.
+The information will be given only if the prescription belongs to the specified patient and was created in the specified practice.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient 
+`identifier` and the prescription `identifier`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :---------------| :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | Patient.Missing       | `message` field | No patient identifier given.     |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
+| 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
+| 200        | Prescription.NotFound | `Result` field  | Prescription not found.          |
+| 200        | OK                    | `Result` field  | Request processed.               |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the prescriptions is returned in the proper fields.
+- Prescription .pdf document (byte[])
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "Prescription": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
+## Get List with BSN [/prescription/getList?practiceagb={practiceagb}&hashedbsn={hashedBsn}&id={id}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
+    + id: 1 (required, number) - prescription identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get details about the specified prescriptions. 
+The information will be given only if the prescriptions belong to the specified patient and were created in the specified practice.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient 
+`identifier` and the prescriptions `identifiers`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :---------------| :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | Patient.Missing       | `message` field | No patient identifier given.     |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
+| 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
+| 200        | OK                    | `Result` field  | Request processed.               |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the prescriptions is returned in the proper fields.
+- Prescription Identifier
+- Prescription Date
+- Identifier (within the client system) of the care professional responsible for the prescription.
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "Prescriptions": [
+                {
+                  "PrescriptionId": "string",
+                  "PrescriptionDate": "string",
+                  "CareProfessionalId": "string"
+                }
+            ],
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
+## Get Local [/prescription/get?practiceagb={practiceagb}&hashedBsn={hashedBsn}&id={id}&token={token}]
+
++ Parameters
+    + practiceagb: 12345678 (required, number) - practice AGB code as an 8-digit number
+    + hashedBsn: 8da1zf3402xaq2ry6w2 (required, string) - patient unique identifier
+    + id: 1 (required, number) - prescription identifier
+    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
+
+### API Definition [GET]
+
+***Description***
+
+This method is used to get the .pdf of the specified prescription.
+The information will be given only if the prescription belongs to the specified patient and was created in the specified practice.
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient 
+`identifier` and the prescription `identifier`.
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :---------------| :------------------------------- |
+| 400        | Practice.Missing      | `message` field | No practice AGB given.           |
+| 400        | Patient.Missing       | `message` field | No patient identifier given.     |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
+| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
+| 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
+| 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
+| 200        | Prescription.NotFound | `Result` field  | Prescription not found.          |
+| 200        | OK                    | `Result` field  | Request processed.               |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB code** and the following 
+information about the prescriptions is returned in the proper fields.
+- Prescription .pdf document (byte[])
+
++ Response 200 (application/json)
+
+        {
+            "InformationDate": "string",
+            "PatientNr": "string",
+            "HashedBSN": "string",
+            "Prescription": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
 
 # Group Single SignOn
 
