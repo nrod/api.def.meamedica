@@ -1306,6 +1306,10 @@ The BSN used for hashing should only contain numbers (no **.** or **-** or other
 
 ***Response***
 
+In case of `200 - OK`, the prescription .pdf will be returned.
+Otherwise an HTTP error will be returned with an aditional description 
+similar to the ones used in the API:
+
 | HTTP Code  | HTTP Reason           | Description                      |
 | :--------: | :-------------------- | :------------------------------- |
 | 400        | Missing.Parameters    | Missing parameters.              |
@@ -1321,8 +1325,6 @@ The BSN used for hashing should only contain numbers (no **.** or **-** or other
 | 500        | Prescription.NotFound | Prescription not found.          |
 | 200        | OK                    | Request processed.               |
 | 500        | Unexpected.Error      | Contact us via [email](<mailto:info@meamedica.nl>). |
-
-In case of `200 - OK`, the prescription .pdf will be returned.
 
 
 # Group Technical Reference
