@@ -190,10 +190,9 @@ The request must contain the `token` and the practice `AGB code`.
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | OK                    | `Result` field  | Practice was found.              |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
 
@@ -245,10 +244,9 @@ The request must contain the `token` and the practice `AGB code`.
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | OK                    | `Result` field  | Care professionals were found.   |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
 
@@ -280,92 +278,6 @@ others) is returned in the proper fields.
             ],
         }
 
-## Get Dentists [/practice/dentists/get?practiceAgb={practiceAgb}&token={token}]
-
-+ Parameters
-    + practiceAgb: 12345678 (required, number) - practice AGB code as an 8-digit number
-    + token: 1g4qq30l3hffqo9za8da1zf3402xaq2ry6w2k02lfjk9w3g284kkoiw5ycdgfup13yycdat9ta (required, string) - encrypted authentication token
-
-### API Definition [GET]
-
-***Description***
-
-This method is used to get detailed information about the care professionals (dentists, 
-assistants or others) that work in the practice identified by the AGB code given as 
-parameter.
-
-***Usage***
-
-The request must contain the `token` and the practice `AGB code`. The method above for 
-Care Professionals should be used instead of this one.
-
-***Response***
-
-| HTTP Code  | API Code              | Found in        | Description                      |
-| :--------: | :-------------------- | :-------------- | :------------------------------- |
-| 400        | Practice.Missing      | `message` field | No practice AGB was given.       |
-| 400        | Token.Missing         | `message` field | No Token was given.              |
-| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
-| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
-| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
-| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
-| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
-| 200        | OK                    | `Result` field  | Care professionals were found.   |
-| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
-
-In case of `OK`, the `Messages` field has the **AGB Code** and the following 
-information about the practice care professionals (dentists and/or assistants) is 
-returned in the proper fields.
-- *Care Professionals*: identifier, initials, lastname and specialty
-- *Care Professionals*: BIG number, KNMT number and email ( *if available* )
-- *Dentists*: identifier, initials, lastname and specialty
-- *Dentists*: BIG number, KNMT number and email ( *if available* )
-- *Assistant*: identifier, initials, lastname and specialty
-- *Assistant*: email ( *if available* )
-- Date when this request was issued ( *dd-mm-yyyy* )
-
-+ Response 200 (application/json)
-
-        {
-            "InformationDate": "string",
-            "CareProfessionals": [
-                {
-                    "CareProfessionalId": "string",
-                    "Initials": "string",
-                    "LastName": "string",
-                    "Specialty": "string",
-                    "BigNumber": "string",
-                    "KnmtNumber": "string",
-                    "Email": "string"
-                }
-            ],
-            "Dentists": [
-                {
-                    "DentistId": "string",
-                    "BigNumber": "string",
-                    "KnmtNumber": "string",
-                    "Initials": "string",
-                    "LastName": "string",
-                    "Specialty": "string",
-                    "Email": "string"
-                }
-            ],
-            "Assistants": [
-                {
-                    "AssistantId": "string",
-                    "Initials": "string",
-                    "LastName": "string",
-                    "Specialty": "string",
-                    "Email": "string"
-                }
-            ],
-            "Result": "string",
-            "Messages": [
-                "string"
-            ],
-        }
         
 # Group Care Professional API
 
@@ -400,10 +312,9 @@ Preventie-assistent, Stagiair, Student, Onbekend.*
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotAdded     | `Result` field  | Care Professional was not created.        |
 | 200        | CareProfessional.NotFound    | `Result` field  | Care Professional was not found.   |
 | 200        | CareProfessional.NotAdded    | `Result` field  | Care Professional was not created. |
@@ -473,10 +384,9 @@ The request must contain the `token`, the practice `AGB code` and the care profe
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotFound     | `Result` field  | Care professional not found.     |
 | 200        | CareProfessional.NotFound | `Result` field  | Care professional not found. |
 | 200        | OK                    | `Result` field  | Care professional was found.     |
@@ -536,12 +446,11 @@ about the patient to create.
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
-| 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
 | 200        | Patient.Exists        | `Result` field  | Patient already exists.          |
+| 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
 | 200        | Patient.NotAdded      | `Result` field  | Patient was not created.         |
 | 200        | OK                    | `Result` field  | Patient was created.             |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -556,6 +465,16 @@ information about the patient is returned in the proper fields.
         {
             "PracticeAgb": "string",
             "PatientNr": "string",
+            "Initials": "string",
+            "FirstName": "string",
+            "Particle": "string",
+            "LastName": "string",
+            "PartnerName": "string",
+            "VektisCode": "string",
+            "Address": "string",
+            "PostalCode": "string",
+            "City": "string",
+            "Country": "string",
             "Gender": "string",
             "Birthdate": "string",
             "Height": "string",
@@ -603,10 +522,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was found.               |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -691,10 +609,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was found.               |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -730,6 +647,78 @@ information about the patient is returned in the proper fields.
                 "string"
             ]
         }
+        
+        
+## Update Local [/patient/local/update]
+
+### API Definition [POST]
+
+***Description***
+
+This method can be used to update the data of a given patient. 
+The patient should already have been created via the create API method.
+It expects to receive the patient data that needs to be changed. 
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient `number` 
+and the information that needs to be updated, namely:
+- Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- Height ( *cm* ) and Weight ( *kg* ) ( *optional fields* )
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :-------------- | :------------------------------- |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice|
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Customer.NotFound     | `Result` field  | Patient was not found.           |
+| 200        | Patient.NotFound      | `Result` field  | Patient was not found.           |
+| 200        | Customer.NotUpdated   | `Result` field  | Patient was not updated.         |
+| 200        | OK                    | `Result` field  | Patient was updated.             |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the patient is returned in the proper fields.
+- Patient number (in the client system)
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "PatientNr": "string",
+            "Initials": "string",
+            "FirstName": "string",
+            "Particle": "string",
+            "LastName": "string",
+            "PartnerName": "string",
+            "VektisCode": "string",
+            "Address": "string",
+            "PostalCode": "string",
+            "City": "string",
+            "Country": "string",
+            "Gender": "string",
+            "Birthdate": "string",
+            "Height": "string",
+            "Weight": "string",
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "PatientNr": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
 
 ## Close Local [/patient/local/close]
 
@@ -755,10 +744,9 @@ The request must contain the `token`, the practice `AGB code` and the patient
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was closed.               |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -812,13 +800,13 @@ about this *hashing* please check [SHA algorithm](https://en.wikipedia.org/wiki/
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.Duplicate    | `Result` field  | Patient already exists.          |
-| 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
+| 200        | Customer.NotFound     | `Result` field  | Patient was not found.           |
 | 200        | Patient.NotFound      | `Result` field  | Patient was not found.           |
+| 200        | Customer.NotAdded     | `Result` field  | Patient was not created.         |
 | 200        | Patient.NotAdded      | `Result` field  | Patient was not created.         |
 | 200        | OK                    | `Result` field  | Patient was created.             |
 | 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
@@ -833,6 +821,16 @@ information about the patient is returned in the proper fields.
         {
             "PracticeAgb": "string",
             "BsnHashed": "string",
+            "Initials": "string",
+            "FirstName": "string",
+            "Particle": "string",
+            "LastName": "string",
+            "PartnerName": "string",
+            "VektisCode": "string",
+            "Address": "string",
+            "PostalCode": "string",
+            "City": "string",
+            "Country": "string",
             "Gender": "string",
             "Birthdate": "string",
             "Height": "string",
@@ -881,10 +879,9 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotFound     | `Result` field  | Patient not found.               |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was found.               |
@@ -971,10 +968,9 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotFound     | `Result` field  | Patient not found.               |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was found.               |
@@ -1012,6 +1008,77 @@ information about the patient is returned in the proper fields.
             ]
         }
 
+## Update with BSN [/patient/update]
+
+### API Definition [POST]
+
+***Description***
+
+This method can be used to update the data of a given patient. 
+The patient should already have been created via the create API method.
+It expects to receive the patient data that needs to be changed. 
+
+***Usage***
+
+The request must contain the `token`, the practice `AGB code`, the patient `hashed BSN` 
+and the information that needs to be updated, namely:
+- Gender ( *m/f* ) and Birthdate ( *dd-mm-yyyy* )
+- Height ( *cm* ) and Weight ( *kg* )
+
+***Response***
+
+| HTTP Code  | API Code              | Found in        | Description                      |
+| :--------: | :-------------------- | :-------------- | :------------------------------- |
+| 400        | Token.Missing         | `message` field | No Token was given.              |
+| 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
+| 401        | Token.Expired         | `message` field | Token is no longer valid.        |
+| 400        | Missing.Parameters    | `message` field | Required parameters are missing. |
+| 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
+| 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
+| 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
+| 200        | Customer.NotFound     | `Result` field  | Patient was not found.           |
+| 200        | Patient.NotFound      | `Result` field  | Patient was not found.           |
+| 200        | Customer.NotUpdated   | `Result` field  | Patient was not updated.         |
+| 200        | OK                    | `Result` field  | Patient was updated.             |
+| 200        | Unexpected.Error      | `Result` field  | Contact us via [email](<mailto:info@meamedica.nl>). |
+
+In case of `OK`, the `Messages` field has the **AGB Code** and the following 
+information about the patient is returned in the proper fields.
+- BSN number (*hashed*)
+
++ Request (application/json)
+
+        {
+            "PracticeAgb": "string",
+            "BsnHashed": "string",
+            "Initials": "string",
+            "FirstName": "string",
+            "Particle": "string",
+            "LastName": "string",
+            "PartnerName": "string",
+            "VektisCode": "string",
+            "Address": "string",
+            "PostalCode": "string",
+            "City": "string",
+            "Country": "string",
+            "Gender": "string",
+            "Birthdate": "string",
+            "Height": "string",
+            "Weight": "string",
+            "Token": "string"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "HashedBSN": "string",
+            "Result": "string",
+            "Messages": [
+                "string"
+            ]
+        }
+
 ## Close with BSN [/patient/close]
 
 ### API Definition [POST]
@@ -1037,10 +1104,9 @@ The request must contain the `token`, the practice `AGB code` and the patient un
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Customer.NotFound     | `Result` field  | Patient not found.               |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | OK                    | `Result` field  | Patient was closed.              |
@@ -1066,7 +1132,7 @@ In case of `OK`, the `Messages` field has the **AGB code**.
         }
 
 # Group Prescription API
-(**Only in Test environment**)
+
 ## Get List Local [/prescription/local/getList?practiceagb={practiceagb}&patientnr={patientnr}&id={id}&token={token}]
 
 + Parameters
@@ -1097,10 +1163,9 @@ The request must contain the `token`, the practice `AGB code`, the patient
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
 | 200        | OK                    | `Result` field  | Request processed.               |
@@ -1161,10 +1226,9 @@ The request must contain the `token`, the practice `AGB code`, the patient
 | 401        | ClientKey.NoAccess    | `message` field | ClientKey is not valid.          |
 | 401        | Token.Expired         | `message` field | Token is no longer valid.        |
 | 200        | Practice.NotFound     | `Result` field  | Practice was not found.          |
+| 200        | Practice.NoAccess     | `Result` field  | Client has no access to the specified practice.|
 | 200        | Subscription.NotFound | `Result` field  | Subscription was not found.      |
 | 200        | Subscription.Expired  | `Result` field  | Subscription has expired.        |
-| 200        | Subscription.NoInfo   | `Result` field  | Subscription has missing data.   |
-| 200        | Subscription.NotPaid  | `Result` field  | Subscription was not paid.       |
 | 200        | Patient.NotFound      | `Result` field  | Patient not found.               |
 | 200        | Customer.NotFound     | `Result` field  | Equivalent to Patient not found. |
 | 200        | OK                    | `Result` field  | Request processed.               |
@@ -1220,8 +1284,6 @@ within the practice while others will send the unique *hashed* BSN (the preferen
 The BSN used for hashing should only contain numbers (no **.** or **-** or other symbols)
 
 # Group Get Prescription
-
-(**Only in Test environment**)
 
 This method is used to get the .pdf of the specified prescription.
 The information will be given only if the prescription belongs to the specified patient and was created in the specified practice.
