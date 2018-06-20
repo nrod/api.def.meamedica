@@ -536,7 +536,8 @@ information about the patient is returned in the proper fields.
 - Latest ASA score with related Questions and Answers
 - Number of medicines in use and related medicine information (including the 
 `PrescriptionId` if the medicine was prescribed in **meamedica|dental**)
-- Number of MTI messages, Allergic to anesthesia
+- Number of MTI messages
+- Allergic to anesthesia and list of the patient's allergies (only medical related)
 - Date when this request was issued ( *dd-mm-yyyy* )
 
 + Response 200 (application/json)
@@ -557,7 +558,7 @@ information about the patient is returned in the proper fields.
             "NrOfMedicines": "string",
             "MedicineInfo": [
                 {
-                  "Name": 0,
+                  "Name": "string",
                   "GenericName": "string",
                   "Dosage": "string",
                   "UsageStartDate": "string",
@@ -571,6 +572,11 @@ information about the patient is returned in the proper fields.
             ],
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
+            "AllergyInfo": [
+                {
+                  "Name": "string"
+                }
+            ],
             "InformationDate": "string",
             "PatientStatus": "string",
             "ActivationUrl": "string",
@@ -893,7 +899,8 @@ information about the patient is returned in the proper fields.
 - Latest ASA score with related Questions and Answers
 - Number of medicines in use and related medicine information (including the 
 `PrescriptionId` if the medicine was prescribed in **meamedica|dental**)
-- Number of MTI messages, Allergic to anesthesia
+- Number of MTI messages
+- Allergic to anesthesia and list of patient's allergies (only medical related)
 - Patient status and activation link (if `Patient.New` or `Patient.Inactive`)
 - Date when this request was issued ( *dd-mm-yyyy* )
 
@@ -915,7 +922,7 @@ information about the patient is returned in the proper fields.
             "NrOfMedicines": "string",
             "MedicineInfo": [
                 {
-                  "Name": 0,
+                  "Name": "string",
                   "GenericName": "string",
                   "Dosage": "string",
                   "UsageStartDate": "string",
@@ -929,6 +936,11 @@ information about the patient is returned in the proper fields.
             ],
             "NrOfMtiMessages": "string",
             "AnesthesiaAllergy": "string",
+            "AllergyInfo": [
+                {
+                  "Name": "string"
+                }
+            ],
             "InformationDate": "string",
             "PatientStatus": "string",
             "ActivationUrl": "string",
